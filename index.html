@@ -700,68 +700,49 @@
                         </div>
 
                         <!-- Section: Commands -->
-                        <div id="wiki-commands" class="wiki-section bg-white border border-slate-200/80 rounded-2xl lg:rounded-3xl p-5 lg:p-10 shadow-sm scroll-mt-36 lg:scroll-mt-24">
-                            <div class="flex items-center gap-3 mb-5 border-b border-slate-100 pb-4">
-                                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl shrink-0">
-                                    <i class="ph-fill ph-terminal-window"></i>
-                                </div>
-                                <h2 class="text-xl lg:text-2xl font-bold text-slate-900">Lệnh Cơ Bản Trong Game</h2>
-                            </div>
-                            
-                            <!-- Custom Mobile-Responsive Card Layout for Tables -->
-                            <div class="overflow-hidden">
-                                <!-- Desktop / Tablet Table View -->
-                                <table class="hidden sm:table w-full text-left border-collapse text-sm">
-                                    <thead>
-                                        <tr class="bg-slate-50 border-b border-slate-200">
-                                            <th class="p-4 font-bold text-slate-800">Cú pháp lệnh</th>
-                                            <th class="p-4 font-bold text-slate-800">Mô tả tác dụng</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-100 text-slate-600">
-                                        <tr>
-                                            <td class="p-4"><code class="bg-slate-100 text-slate-800 px-2 py-1 rounded font-mono font-bold text-xs">/spawn</code></td>
-                                            <td class="p-4">Dịch chuyển tức thời về đảo hồi sinh trung tâm.</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="p-4"><code class="bg-slate-100 text-slate-800 px-2 py-1 rounded font-mono font-bold text-xs">/pay [Tên] [Số]</code></td>
-                                            <td class="p-4">Chuyển tiền xu trong tài khoản trực tiếp cho bạn chơi khác.</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="p-4"><code class="bg-slate-100 text-slate-800 px-2 py-1 rounded font-mono font-bold text-xs">/ah</code></td>
-                                            <td class="p-4">Mở bảng chợ đen trực tuyến - nơi giao dịch vật phẩm của người chơi.</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <!-- Mobile List View (Self-contained, touch-friendly cards) -->
-                                <div class="block sm:hidden space-y-3.5">
-                                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2">
-                                        <div class="flex items-center justify-between border-b border-slate-200/50 pb-2">
-                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cú pháp</span>
-                                            <code class="bg-slate-200/80 text-slate-800 px-2 py-0.5 rounded font-mono font-bold text-xs">/spawn</code>
+                        <!-- Section: Commands (DYNAMIC SYSTEM) -->
+                                <div id="wiki-commands" class="wiki-section bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-10 shadow-sm scroll-mt-24">
+                                    <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-4">
+                                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
+                                            <i class="ph-fill ph-terminal-window"></i>
                                         </div>
-                                        <p class="text-xs font-medium text-slate-600 leading-relaxed"><span class="text-slate-400">Tác dụng:</span> Dịch chuyển tức thời về đảo hồi sinh trung tâm.</p>
+                                        <div class="flex-grow">
+                                            <h2 class="text-2xl font-bold text-slate-900">Hệ Thống Lệnh Trong Game</h2>
+                                            <p class="text-slate-400 text-xs mt-0.5 font-medium">Tìm kiếm nhanh lệnh, tính năng hoặc từ khóa bằng tiếng Việt</p>
+                                        </div>
                                     </div>
-
-                                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2">
-                                        <div class="flex items-center justify-between border-b border-slate-200/50 pb-2">
-                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cú pháp</span>
-                                            <code class="bg-slate-200/80 text-slate-800 px-2 py-0.5 rounded font-mono font-bold text-xs">/pay [Tên] [Số]</code>
+                                    
+                                    <!-- Search Bar Lệnh -->
+                                    <div class="mb-6">
+                                        <div class="relative max-w-md">
+                                            <i class="ph ph-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg"></i>
+                                            <input type="text" id="search-commands" onkeyup="filterCommands()" placeholder="Tìm cú pháp hoặc tác dụng (VD: claim, bal, bay)..." class="w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-shadow shadow-sm text-sm">
                                         </div>
-                                        <p class="text-xs font-medium text-slate-600 leading-relaxed"><span class="text-slate-400">Tác dụng:</span> Chuyển tiền xu trong tài khoản trực tiếp cho bạn chơi khác.</p>
                                     </div>
-
-                                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2">
-                                        <div class="flex items-center justify-between border-b border-slate-200/50 pb-2">
-                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cú pháp</span>
-                                            <code class="bg-slate-200/80 text-slate-800 px-2 py-0.5 rounded font-mono font-bold text-xs">/ah</code>
+                                
+                                    <!-- 1. GIAO DIỆN DESKTOP (STICKY TABLE) -->
+                                    <div class="hidden md:block bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
+                                        <div class="overflow-x-auto max-h-[500px]">
+                                            <table class="w-full text-left border-collapse">
+                                                <thead class="sticky top-0 bg-slate-50 border-b border-slate-200 z-10">
+                                                    <tr>
+                                                        <th class="p-4 font-bold text-slate-800 text-sm w-1/3">Cú Pháp Lệnh</th>
+                                                        <th class="p-4 font-bold text-slate-800 text-sm">Mô Tả Chi Tiết Tác Dụng</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="commands-tbody-desktop" class="divide-y divide-slate-100">
+                                                    <!-- Load bằng JS -->
+                                                </tbody>
+                                            </table>
                                         </div>
-                                        <p class="text-xs font-medium text-slate-600 leading-relaxed"><span class="text-slate-400">Tác dụng:</span> Mở bảng chợ đen trực tuyến - nơi giao dịch vật phẩm của người chơi.</p>
+                                    </div>
+                                
+                                    <!-- 2. GIAO DIỆN MOBILE (CARD LAYOUT CHỐNG TRÀN) -->
+                                    <div id="commands-container-mobile" class="block md:hidden space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                                        <!-- Load bằng JS -->
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+
 
                         <!-- Custom Enchantments (DYNAMIC TABLE) -->
                         <div id="wiki-enchantments" class="wiki-section bg-white border border-slate-200/80 rounded-2xl lg:rounded-3xl p-5 lg:p-10 shadow-sm scroll-mt-36 lg:scroll-mt-24">
@@ -1096,6 +1077,205 @@
             tbodyMobile.innerHTML = mobileHtml;
         }
 
+        const commandsData = [
+    { cmd: "/abandonallclaims", desc: "Xóa toàn bộ vùng đất đã claim của bạn." },
+    { cmd: "/abandonclaim", desc: "Xóa vùng đất hiện tại đang đứng." },
+    { cmd: "/accesstrust", desc: "Cấp quyền sử dụng cửa, nút bấm và cơ chế Redstone trong claim." },
+    { cmd: "/adminsettings", desc: "Mở cài đặt quản trị đặc biệt." },
+    { cmd: "/afk", desc: "Chuyển sang trạng thái AFK (vắng mặt)." },
+    { cmd: "/ah", desc: "Mở Chợ Đấu Giá của máy chủ." },
+    { cmd: "/auction", desc: "Mở hệ thống đấu giá vật phẩm." },
+    { cmd: "/axtrade", desc: "Gửi yêu cầu giao dịch trực tiếp với người chơi khác." },
+    { cmd: "/back", desc: "Quay lại vị trí trước khi dịch chuyển hoặc tử vong." },
+    { cmd: "/backpack", desc: "Mở Ba Lô cá nhân." },
+    { cmd: "/bal", desc: "Xem số dư tài khoản." },
+    { cmd: "/balance", desc: "Xem số dư tài khoản." },
+    { cmd: "/baltop", desc: "Xem bảng xếp hạng người chơi giàu nhất." },
+    { cmd: "/balancetop", desc: "Xem bảng xếp hạng người chơi giàu nhất." },
+    { cmd: "/betterrtp", desc: "Dịch chuyển ngẫu nhiên đến một vị trí mới." },
+    { cmd: "/bottom", desc: "Dịch chuyển xuống đáy khu vực hiện tại." },
+    { cmd: "/bp", desc: "Mở Ba Lô cá nhân." },
+    { cmd: "/buyclaimblocks", desc: "Mua thêm điểm claim đất." },
+    { cmd: "/caidat", desc: "Mở cài đặt cá nhân." },
+    { cmd: "/caidatclaim", desc: "Mở cài đặt khu vực đã claim." },
+    { cmd: "/capbac", desc: "Xem hoặc nâng cấp cấp bậc nhân vật." },
+    { cmd: "/ce", desc: "Mở giao diện Custom Enchantments." },
+    { cmd: "/changepassword", desc: "Đổi mật khẩu tài khoản." },
+    { cmd: "/chatcolor", desc: "Thay đổi màu sắc khung chat." },
+    { cmd: "/claim", desc: "Claim vùng đất hiện tại." },
+    { cmd: "/claimslist", desc: "Xem danh sách vùng đất đã claim." },
+    { cmd: "/claimsettings", desc: "Mở cài đặt claim." },
+    { cmd: "/code", desc: "Nhập mã quà tặng." },
+    { cmd: "/coins", desc: "Xem số Coins đang sở hữu." },
+    { cmd: "/colors", desc: "Xem danh sách màu chat khả dụng." },
+    { cmd: "/containertrust", desc: "Cấp quyền sử dụng rương và container trong claim." },
+    { cmd: "/cosmetics", desc: "Mở menu hiệu ứng và trang trí." },
+    { cmd: "/crates", desc: "Mở menu Rương Phần Thưởng." },
+    { cmd: "/crawl", desc: "Chuyển sang tư thế bò." },
+    { cmd: "/customitem", desc: "Xem vật phẩm tùy chỉnh của máy chủ." },
+    { cmd: "/delhome", desc: "Xóa một vị trí Home." },
+    { cmd: "/diemdanh", desc: "Điểm danh nhận quà hằng ngày." },
+    { cmd: "/discord", desc: "Xem thông tin Discord máy chủ." },
+    { cmd: "/eat", desc: "Hồi đầy thanh thức ăn." },
+    { cmd: "/enderchest", desc: "Mở Rương Ender cá nhân." },
+    { cmd: "/fastce", desc: "Mở vòng quay Custom Enchant." },
+    { cmd: "/feed", desc: "Hồi đầy thanh thức ăn." },
+    { cmd: "/fix", desc: "Sửa chữa vật phẩm đang cầm." },
+    { cmd: "/fly", desc: "Bật hoặc tắt chế độ bay." },
+    { cmd: "/giftcode", desc: "Nhập GiftCode nhận phần thưởng." },
+    { cmd: "/glow", desc: "Bật hiệu ứng phát sáng quanh nhân vật." },
+    { cmd: "/gsit", desc: "Ngồi xuống tại vị trí hiện tại." },
+    { cmd: "/hat", desc: "Đội vật phẩm trên tay lên đầu." },
+    { cmd: "/heal", desc: "Hồi đầy máu và hiệu ứng." },
+    { cmd: "/home", desc: "Dịch chuyển đến Home đã đặt." },
+    { cmd: "/homes", desc: "Xem danh sách Home." },
+    { cmd: "/ignore", desc: "Chặn tin nhắn từ người chơi khác." },
+    { cmd: "/keys", desc: "Xem số lượng chìa khóa đang sở hữu." },
+    { cmd: "/leaderboards", desc: "Xem các bảng xếp hạng của máy chủ." },
+    { cmd: "/login", desc: "Đăng nhập tài khoản." },
+    { cmd: "/logout", desc: "Đăng xuất an toàn khỏi máy chủ." },
+    { cmd: "/mail", desc: "Nhận thư và vật phẩm được gửi." },
+    { cmd: "/mcability", desc: "Bật hoặc tắt kỹ năng mcMMO." },
+    { cmd: "/mcnotify", desc: "Bật hoặc tắt thông báo mcMMO." },
+    { cmd: "/mcstats", desc: "Xem thống kê kỹ năng mcMMO." },
+    { cmd: "/mctop", desc: "Xem bảng xếp hạng mcMMO." },
+    { cmd: "/menu", desc: "Mở menu chính của máy chủ." },
+    { cmd: "/money", desc: "Xem số dư tài khoản." },
+    { cmd: "/motd", desc: "Xem thông báo máy chủ." },
+    { cmd: "/msg", desc: "Gửi tin nhắn riêng." },
+    { cmd: "/msgtoggle", desc: "Bật hoặc tắt nhận tin nhắn riêng." },
+    { cmd: "/muaclaim", desc: "Mua thêm điểm claim đất." },
+    { cmd: "/muakey", desc: "Mua chìa khóa mở rương." },
+    { cmd: "/muashard", desc: "Mua mảnh ghép nâng cấp." },
+    { cmd: "/nick", desc: "Đổi biệt danh." },
+    { cmd: "/parkour", desc: "Mở hệ thống Parkour." },
+    { cmd: "/party", desc: "Tạo hoặc quản lý tổ đội." },
+    { cmd: "/pay", desc: "Chuyển tiền cho người chơi khác." },
+    { cmd: "/paytoggle", desc: "Bật hoặc tắt nhận giao dịch tiền." },
+    { cmd: "/permissiontrust", desc: "Cấp quyền quản lý claim cho người khác." },
+    { cmd: "/pets", desc: "Mở menu thú cưng." },
+    { cmd: "/phoban", desc: "Mở hệ thống Phó Bản." },
+    { cmd: "/playersettings", desc: "Mở cài đặt cá nhân." },
+    { cmd: "/points", desc: "Xem số điểm PlayerPoints." },
+    { cmd: "/ptime", desc: "Thay đổi thời gian hiển thị cá nhân." },
+    { cmd: "/pv", desc: "Mở Kho Đồ Cá Nhân." },
+    { cmd: "/pvmenu", desc: "Xem danh sách các Kho Đồ Cá Nhân." },
+    { cmd: "/pvp", desc: "Bật hoặc tắt chế độ PvP." },
+    { cmd: "/pweather", desc: "Thay đổi thời tiết hiển thị cá nhân." },
+    { cmd: "/quest", desc: "Mở giao diện nhiệm vụ." },
+    { cmd: "/quests", desc: "Xem danh sách nhiệm vụ." },
+    { cmd: "/r", desc: "Trả lời tin nhắn riêng gần nhất." },
+    { cmd: "/rank", desc: "Xem thông tin cấp bậc." },
+    { cmd: "/rankpoints", desc: "Mua hoặc nâng cấp rank bằng Points." },
+    { cmd: "/rankxu", desc: "Mua hoặc nâng cấp rank bằng Xu." },
+    { cmd: "/reg", desc: "Đăng ký tài khoản." },
+    { cmd: "/register", desc: "Đăng ký tài khoản." },
+    { cmd: "/repair", desc: "Sửa chữa vật phẩm." },
+    { cmd: "/rtp", desc: "Dịch chuyển ngẫu nhiên." },
+    { cmd: "/rules", desc: "Xem nội quy máy chủ." },
+    { cmd: "/sb", desc: "Mở bảng thông tin Sidebar." },
+    { cmd: "/season", desc: "Xem thông tin mùa hiện tại." },
+    { cmd: "/seasons", desc: "Xem thông tin mùa hiện tại." },
+    { cmd: "/sell", desc: "Bán vật phẩm đang cầm." },
+    { cmd: "/sellclaimblocks", desc: "Bán lại điểm claim đất." },
+    { cmd: "/sellmulti", desc: "Bán nhiều vật phẩm cùng lúc." },
+    { cmd: "/serverrules", desc: "Xem nội quy máy chủ." },
+    { cmd: "/sethome", desc: "Đặt vị trí Home." },
+    { cmd: "/settings", desc: "Mở cài đặt cá nhân." },
+    { cmd: "/sguide", desc: "Mở hướng dẫn dành cho Staff." },
+    { cmd: "/shop", desc: "Mở cửa hàng máy chủ." },
+    { cmd: "/sit", desc: "Ngồi xuống." },
+    { cmd: "/skill", desc: "Xem kỹ năng AuraSkills." },
+    { cmd: "/skills", desc: "Xem toàn bộ kỹ năng AuraSkills." },
+    { cmd: "/skin", desc: "Thay đổi Skin nhân vật." },
+    { cmd: "/skins", desc: "Mở menu quản lý Skin." },
+    { cmd: "/socials", desc: "Xem mạng xã hội của máy chủ." },
+    { cmd: "/spawn", desc: "Quay về Spawn." },
+    { cmd: "/specialshop", desc: "Mở Cửa Hàng Đặc Biệt." },
+    { cmd: "/spin", desc: "Mở vòng quay may mắn." },
+    { cmd: "/staffguide", desc: "Mở hướng dẫn Staff." },
+    { cmd: "/stats", desc: "Xem thống kê nhân vật." },
+    { cmd: "/suicide", desc: "Tự sát để hồi sinh." },
+    { cmd: "/tab", desc: "Tùy chỉnh hiển thị TAB." },
+    { cmd: "/tags", desc: "Mở menu danh hiệu." },
+    { cmd: "/tag", desc: "Chọn danh hiệu hiển thị." },
+    { cmd: "/taixiu", desc: "Mở trò chơi Tài Xỉu." },
+    { cmd: "/team", desc: "Quản lý đội nhóm." },
+    { cmd: "/teams", desc: "Xem hoặc quản lý đội nhóm." },
+    { cmd: "/tienich", desc: "Mở menu tiện ích nhanh." },
+    { cmd: "/top", desc: "Dịch chuyển lên vị trí cao nhất." },
+    { cmd: "/tp", desc: "Dịch chuyển đến người chơi khác." },
+    { cmd: "/tpa", desc: "Gửi yêu cầu dịch chuyển." },
+    { cmd: "/tpaccept", desc: "Chấp nhận yêu cầu dịch chuyển." },
+    { cmd: "/tpahere", desc: "Mời người khác dịch chuyển đến bạn." },
+    { cmd: "/tpdeny", desc: "Từ chối yêu cầu dịch chuyển." },
+    { cmd: "/tptoggle", desc: "Bật hoặc tắt nhận yêu cầu dịch chuyển." },
+    { cmd: "/trade", desc: "Giao dịch với người chơi khác." },
+    { cmd: "/trapped", desc: "Thoát khỏi vị trí bị kẹt trong claim." },
+    { cmd: "/trash", desc: "Mở thùng rác cá nhân." },
+    { cmd: "/trust", desc: "Cấp quyền xây dựng trong claim." },
+    { cmd: "/tutorial", desc: "Mở hướng dẫn máy chủ." },
+    { cmd: "/unclaim", desc: "Hủy claim hiện tại." },
+    { cmd: "/untrust", desc: "Thu hồi quyền đã cấp." },
+    { cmd: "/vaults", desc: "Mở danh sách Kho Đồ Cá Nhân." },
+    { cmd: "/veinminer", desc: "Bật hoặc tắt VeinMiner." },
+    { cmd: "/voicechat", desc: "Mở cài đặt Voice Chat." },
+    { cmd: "/warp", desc: "Dịch chuyển đến khu vực công cộng." },
+    { cmd: "/warps", desc: "Xem danh sách Warp." }
+];
+
+// Hàm Render Hệ Thống Lệnh
+function renderCommandsTable(data) {
+    const tbodyDesktop = document.getElementById('commands-tbody-desktop');
+    const containerMobile = document.getElementById('commands-container-mobile');
+    
+    let desktopHtml = '';
+    let mobileHtml = '';
+    
+    if (data.length === 0) {
+        const noResult = '<tr><td colspan="2" class="p-6 text-center text-slate-500 font-semibold">Không tìm thấy phím lệnh nào phù hợp.</td></tr>';
+        tbodyDesktop.innerHTML = noResult;
+        containerMobile.innerHTML = '<div class="p-6 text-center text-slate-500 font-semibold bg-white rounded-2xl border border-slate-200/60">Không tìm thấy phím lệnh nào phù hợp.</div>';
+        return;
+    }
+
+    data.forEach(item => {
+        // Render dạng bảng cho PC
+        desktopHtml += `
+        <tr class="hover:bg-slate-50/80 transition-colors border-b border-slate-100 last:border-0">
+            <td class="p-4">
+                <code class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-xl font-mono text-xs font-bold border border-blue-100">${item.cmd}</code>
+            </td>
+            <td class="p-4 text-sm text-slate-600 font-medium">${item.desc}</td>
+        </tr>
+        `;
+
+        // Render dạng thẻ cho Mobile
+        mobileHtml += `
+        <div class="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm space-y-2">
+            <div class="flex items-center justify-between">
+                <code class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-xl font-mono text-xs font-bold border border-blue-100">${item.cmd}</code>
+            </div>
+            <p class="text-xs text-slate-600 font-medium leading-relaxed">${item.desc}</p>
+        </div>
+        `;
+    });
+
+    tbodyDesktop.innerHTML = desktopHtml;
+    containerMobile.innerHTML = mobileHtml;
+}
+
+// Hàm Tìm Kiếm Trực Tiếp Lệnh (Live Search)
+function filterCommands() {
+    const query = document.getElementById('search-commands').value.toLowerCase().trim();
+    const filtered = commandsData.filter(item => 
+        item.cmd.toLowerCase().includes(query) || 
+        item.desc.toLowerCase().includes(query)
+    );
+    renderCommandsTable(filtered);
+}
+
+
         // Search Filter Logic
         function filterEnchantments() {
             const query = document.getElementById('search-enchants').value.toLowerCase().trim();
@@ -1418,6 +1598,7 @@
 
             // Render table
             renderTable(enchantData);
+            renderCommandsTable(commandsData);
 
             // Fetch default Server Status
             fetchServerStatus('play.wibuland.io.vn');
