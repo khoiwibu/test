@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WibuLand - Máy Chủ Minecraft Việt Nam</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Plus Jakarta Sans & Quicksand) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        mc: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            green: '#4e9a06',
+                            lightgreen: '#8ae234',
+                            earth: '#8f5902',
+                            gold: '#fce94f',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        .mc-shadow {
+            box-shadow: 0 8px 30px rgb(0 0 0 / 0.04);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Hide scrollbars for sliding tabs on mobile */
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-[#fcfdfa] text-slate-800 font-sans antialiased overflow-x-hidden">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-emerald-100/50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <!-- Logo -->
+                <a href="#" onclick="switchView('profile')" class="flex items-center space-x-3 group">
+                    <div id="nav-logo-icon" class="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-green-400 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shadow-emerald-200 group-hover:scale-105 transition-all">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M5,5H19V9H17V7H15V9H13V7H11V9H9V7H7V9H5V5M19,19H5V11H7V13H9V11H11V13H13V11H15V13H17V11H19V19Z" />
+                        </svg>
+                    </div>
+                    <span id="nav-logo-text" class="font-display font-extrabold text-xl sm:text-2xl text-emerald-800 tracking-tight">Wibu<span class="text-blue-600">Land</span></span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <button onclick="switchView('profile')" id="nav-btn-home" class="font-bold text-emerald-600 transition-colors py-2 px-3 rounded-lg">Trang chủ</button>
+                    <button onclick="switchView('wiki')" id="nav-btn-wiki" class="font-medium text-slate-600 hover:text-emerald-600 transition-colors py-2 px-3 rounded-lg">Wiki Server</button>
+                    
+                    <div id="nav-profile-links" class="flex items-center space-x-6 border-l border-slate-200 pl-6">
+                        <a href="#about" onclick="handleNavClick(event, 'about')" class="font-medium text-slate-600 hover:text-emerald-600 transition-colors">Giới thiệu</a>
+                        <a href="#modes" onclick="handleNavClick(event, 'modes')" class="font-medium text-slate-600 hover:text-emerald-600 transition-colors">Chế độ chơi</a>
+                        <a href="#shop" onclick="handleNavClick(event, 'shop')" class="font-medium text-slate-600 hover:text-emerald-600 transition-colors">Cửa hàng</a>
+                        <a href="#faq" onclick="handleNavClick(event, 'faq')" class="font-medium text-slate-600 hover:text-emerald-600 transition-colors">Hỏi đáp</a>
+                    </div>
+                </div>
+
+                <!-- Action Button / Copy IP -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button onclick="copyServerIP('play.wibuland.io.vn')" class="flex items-center space-x-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-4 py-2.5 rounded-xl transition-all duration-200 border border-emerald-200 active:scale-95">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                        <span>IP: play.wibuland.io.vn</span>
+                    </button>
+                    <a href="https://discord.gg/minecraft" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-blue-200 flex items-center space-x-2 transition-all active:scale-95">
+                        <i data-lucide="message-square" class="w-4 h-4"></i>
+                        <span>Discord</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none" aria-label="Toggle menu">
+                        <i data-lucide="menu" id="menu-icon" class="w-6 h-6 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Collapsible) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 px-4 pt-3 pb-6 space-y-3 shadow-lg">
+            <button onclick="switchView('profile')" class="block w-full text-left px-3 py-2 rounded-lg text-base font-bold text-emerald-600">Trang chủ</button>
+            <button onclick="switchView('wiki')" class="block w-full text-left px-3 py-2 rounded-lg text-base font-semibold text-slate-700 hover:bg-emerald-50">Wiki Server</button>
+            
+            <div id="mobile-profile-links" class="space-y-1">
+                <a href="#about" onclick="handleNavClick(event, 'about')" class="block px-3 py-2 rounded-lg text-base font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors">Giới thiệu</a>
+                <a href="#modes" onclick="handleNavClick(event, 'modes')" class="block px-3 py-2 rounded-lg text-base font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors">Chế độ chơi</a>
+                <a href="#shop" onclick="handleNavClick(event, 'shop')" class="block px-3 py-2 rounded-lg text-base font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors">Cửa hàng</a>
+                <a href="#faq" onclick="handleNavClick(event, 'faq')" class="block px-3 py-2 rounded-lg text-base font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors">Hỏi đáp</a>
+            </div>
+            <hr class="border-slate-100 my-2">
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <button onclick="copyServerIP('play.wibuland.io.vn')" class="w-full flex items-center justify-center space-x-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold p-3 rounded-xl transition-all border border-emerald-200">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    <span class="text-sm">Copy IP</span>
+                </button>
+                <a href="https://discord.gg/minecraft" target="_blank" class="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-xl shadow-md transition-all text-sm">
+                    <i data-lucide="message-square" class="w-4 h-4"></i>
+                    <span>Discord</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- VIEW 1: HOME PAGE (PROFILE VIEW) -->
+    <div id="view-profile" class="transition-all duration-300">
+        <!-- HERO SECTION -->
+        <header class="relative overflow-hidden pt-12 pb-20 sm:pb-32 bg-gradient-to-b from-emerald-50/50 via-white to-transparent">
+            <div class="absolute -top-40 -left-40 w-96 h-96 bg-emerald-100 rounded-full blur-3xl opacity-40 pointer-events-none"></div>
+            <div class="absolute top-20 right-[-10%] w-[30rem] h-[30rem] bg-blue-100 rounded-full blur-3xl opacity-30 pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                    <!-- Hero Left Content -->
+                    <div class="lg:col-span-7 text-center lg:text-left space-y-6 sm:space-y-8">
+                        <div class="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full text-emerald-700 font-semibold text-xs sm:text-sm tracking-wide mx-auto lg:mx-0">
+                            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                            <span>Hỗ trợ phiên bản 1.16 - 1.21.x</span>
+                        </div>
+
+                        <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-900 leading-[1.15] sm:leading-[1.1] tracking-tight">
+                            Chinh Phục Thế Giới <br class="hidden sm:inline">
+                            <span class="text-gradient">Minecraft</span> Kỳ Diệu
+                        </h1>
+
+                        <p class="text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 font-medium leading-relaxed">
+                            Tham gia cộng đồng Minecraft năng động hàng đầu Việt Nam. Tận hưởng lối chơi sinh tồn đỉnh cao, sự kiện hàng tuần đầy gay cấn và hệ thống tính năng độc quyền siêu mượt mà!
+                        </p>
+
+                        <div class="space-y-4 max-w-md mx-auto lg:mx-0">
+                            <div class="bg-white border border-slate-200/80 p-2 rounded-2xl flex items-center justify-between shadow-lg shadow-slate-100/50">
+                                <div class="flex items-center space-x-3 pl-3">
+                                    <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                    <span class="font-mono font-bold text-slate-700 text-sm sm:text-base">play.wibuland.io.vn</span>
+                                </div>
+                                <button onclick="copyServerIP('play.wibuland.io.vn')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center space-x-2 active:scale-95 text-sm">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                    <span>Copy IP</span>
+                                </button>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+                                <a href="#modes" onclick="handleNavClick(event, 'modes')" class="w-full sm:w-auto text-center bg-slate-900 hover:bg-slate-800 text-white font-bold px-8 py-3.5 rounded-xl transition-all duration-200 shadow-md flex items-center justify-center space-x-2">
+                                    <span>Khám phá ngay</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                                <a href="#status-checker" onclick="handleNavClick(event, 'status-checker')" class="w-full sm:w-auto text-center bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold px-8 py-3.5 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2">
+                                    <i data-lucide="activity" class="w-4 h-4 text-emerald-500"></i>
+                                    <span>Check Server Live</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Trust Stats -->
+                        <div class="pt-6 border-t border-slate-100 flex flex-wrap items-center justify-center lg:justify-start gap-8">
+                            <div>
+                                <span class="block font-display font-black text-3xl text-emerald-600">5,000+</span>
+                                <span class="text-sm font-semibold text-slate-500">Thành viên đăng ký</span>
+                            </div>
+                            <div class="w-px h-8 bg-slate-200 hidden sm:block"></div>
+                            <div>
+                                <span class="block font-display font-black text-3xl text-blue-600" id="hero-online-count">142+</span>
+                                <span class="text-sm font-semibold text-slate-500">Người chơi online</span>
+                            </div>
+                            <div class="w-px h-8 bg-slate-200 hidden sm:block"></div>
+                            <div>
+                                <span class="block font-display font-black text-3xl text-amber-500">99.9%</span>
+                                <span class="text-sm font-semibold text-slate-500">Thời gian Up-time</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hero Right -->
+                    <div class="lg:col-span-5 relative mt-8 lg:mt-0 flex justify-center">
+                        <div class="relative w-full max-w-sm sm:max-w-md bg-white rounded-3xl border border-slate-100 shadow-2xl p-6 sm:p-8 hover:translate-y-[-4px] transition-transform duration-300">
+                            <div class="absolute -top-5 -right-5 bg-amber-400 text-amber-950 font-display font-black text-xs px-4 py-1.5 rounded-full shadow-md rotate-12 flex items-center space-x-1">
+                                <i data-lucide="zap" class="w-3.5 h-3.5 fill-current"></i>
+                                <span>MỚI LẠ CỰC HOT!</span>
+                            </div>
+
+                            <div class="flex items-center space-x-4 mb-6">
+                                <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
+                                    <i data-lucide="sparkles" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-display font-bold text-lg text-slate-900">Tính năng mùa giải</h3>
+                                    <p class="text-xs text-slate-500 font-medium">Cập nhật hàng tháng</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="flex items-start space-x-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                                    <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i data-lucide="swords" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-sm text-slate-800">Survival Towny Custom</h4>
+                                        <p class="text-xs text-slate-500 leading-relaxed mt-0.5">Sở hữu đất đai, buôn bán vật phẩm tùy biến siêu phong phú.</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start space-x-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i data-lucide="crown" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-sm text-slate-800">Hầm ngục Dungeons</h4>
+                                        <p class="text-xs text-slate-500 leading-relaxed mt-0.5">Lập tổ đội chinh phục quái thú và Boss để nhận trang bị cực hiếm.</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start space-x-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                                    <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i data-lucide="coins" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-sm text-slate-800">Chợ đen và Giao dịch</h4>
+                                        <p class="text-xs text-slate-500 leading-relaxed mt-0.5">Giao dịch an toàn, kích thích kinh tế tuần hoàn trong game.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-500">
+                                <div class="flex items-center space-x-2">
+                                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                    <span>Trạng thái: Hoạt động</span>
+                                </div>
+                                <div>
+                                    <span>Ping: ~12ms (Việt Nam)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- INTRO / ABOUT SECTION -->
+        <section id="about" class="py-16 sm:py-24 border-t border-slate-100 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+                    <span class="text-emerald-600 font-bold text-xs sm:text-sm uppercase tracking-widest block">Về Chúng Tôi</span>
+                    <h2 class="font-display font-black text-3xl sm:text-4xl text-slate-900 tracking-tight">Thế giới sáng tạo không giới hạn</h2>
+                    <p class="text-slate-500 font-medium text-base sm:text-lg leading-relaxed">
+                        Được thành lập bởi đội ngũ tâm huyết, WibuLand hướng tới trải nghiệm chơi Minecraft cân bằng, ổn định và đầy hứng khởi cho game thủ Việt.
+                    </p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-gradient-to-tr from-emerald-50 to-green-50/20 border border-emerald-100/60 p-6 rounded-2xl text-center space-y-2">
+                        <div class="w-12 h-12 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-slate-900">Chống ddos cực mạnh</h3>
+                        <p class="text-slate-500 text-sm font-medium">Đảm bảo trải nghiệm kết nối không bị gián đoạn, mượt mà 24/7.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-tr from-blue-50 to-blue-50/20 border border-blue-100/60 p-6 rounded-2xl text-center space-y-2">
+                        <div class="w-12 h-12 bg-blue-500/10 text-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-slate-900">Cộng đồng văn minh</h3>
+                        <p class="text-slate-500 text-sm font-medium">Hệ thống quản lý, bảo vệ tài sản và chống toxic hoàn hảo.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-tr from-amber-50 to-amber-50/20 border border-amber-100/60 p-6 rounded-2xl text-center space-y-2">
+                        <div class="w-12 h-12 bg-amber-500/10 text-amber-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="rocket" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-slate-900">Cập nhật liên tục</h3>
+                        <p class="text-slate-500 text-sm font-medium">Bổ dung nội dung, nhiệm vụ và vật phẩm mới hàng tuần.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-tr from-indigo-50 to-indigo-50/20 border border-indigo-100/60 p-6 rounded-2xl text-center space-y-2">
+                        <div class="w-12 h-12 bg-indigo-500/10 text-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="wrench" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-slate-900">Đội ngũ kỹ thuật tốt</h3>
+                        <p class="text-slate-500 text-sm font-medium">Admin & Supporter túc trực, hỗ trợ nhanh chóng qua Discord.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LIVE CHECKER -->
+        <section id="status-checker" class="py-16 bg-slate-50 border-y border-slate-100">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6">
+                <div class="bg-white border border-slate-200/80 rounded-3xl shadow-xl p-6 sm:p-10 relative overflow-hidden">
+                    <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-emerald-100 rounded-full blur-2xl opacity-50"></div>
+                    
+                    <div class="relative z-10 space-y-6">
+                        <div class="text-center sm:text-left">
+                            <span class="inline-flex items-center space-x-1 bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-md mb-3">
+                                <i data-lucide="terminal" class="w-3 h-3"></i>
+                                <span>CÔNG CỤ LIVE CHECKER</span>
+                            </span>
+                            <h3 class="font-display font-bold text-2xl text-slate-900">Kiểm Tra Trạng Thế Server Trực Tuyến</h3>
+                            <p class="text-slate-500 text-sm mt-1">Kiểm tra số người chơi online hiện tại và mô tả (MOTD) của bất cứ máy chủ Minecraft nào.</p>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <div class="relative flex-grow">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i data-lucide="globe" class="w-5 h-5 text-slate-400"></i>
+                                </div>
+                                <input type="text" id="target-server-ip" value="play.wibuland.io.vn" placeholder="Nhập IP Server" class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-medium transition-all">
+                            </div>
+                            <button onclick="checkTargetServer()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3.5 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 active:scale-95 shrink-0">
+                                <i data-lucide="search" class="w-5 h-5"></i>
+                                <span>Kiểm Tra</span>
+                            </button>
+                        </div>
+
+                        <div id="status-result" class="p-4 sm:p-6 bg-slate-50/50 border border-slate-100 rounded-2xl min-h-[140px] flex items-center justify-center">
+                            <div class="text-center text-slate-400 py-4">
+                                <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-emerald-500"></i>
+                                <p class="text-sm font-semibold text-slate-600">Đang đồng bộ dữ liệu từ play.wibuland.io.vn...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME MODES -->
+        <section id="modes" class="py-16 sm:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+                    <span class="text-emerald-600 font-bold text-xs sm:text-sm uppercase tracking-widest block">Chế Độ Chơi</span>
+                    <h2 class="font-display font-black text-3xl sm:text-4xl text-slate-900 tracking-tight">Thế giới muôn màu phong phú</h2>
+                    <p class="text-slate-500 font-medium text-base sm:text-lg">Chúng tôi tích hợp nhiều chế độ chơi được thiết lập bài bản để đáp ứng sở thích của mọi game thủ.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Survival Towny -->
+                    <div class="bg-[#fbfcfa] border border-slate-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 relative group overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-colors"></div>
+                        <div>
+                            <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="pickaxe" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="font-display font-extrabold text-xl text-slate-900 mb-3">Towny Survival</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                                Sống sót, lập nghiệp và lập quốc gia riêng của bạn. Hệ thống chiếm đất chống phá hoại tài sản, giao dịch vật phẩm tự do, chế tạo vũ khí huyền thoại.
+                            </p>
+                            <ul class="space-y-2.5 mb-8">
+                                <li class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+                                    <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                                    <span>Chống phá nhà (Claim Land)</span>
+                                </li>
+                                <li class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+                                    <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                                    <span>Kinh tế cân bằng, Chợ trời phong phú</span>
+                                </li>
+                                <li class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+                                    <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i>
+                                    <span>Nhiệm vụ hàng ngày phong phú</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="copyServerIP('play.wibuland.io.vn')" class="w-full py-3 px-4 bg-emerald-50 hover:bg-emerald-500 hover:text-white text-emerald-700 font-bold rounded-2xl transition-all text-sm flex items-center justify-center space-x-2">
+                            <span>Chơi Chế Độ Này</span>
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                        </button>
+                    </div>
+
+                    <!-- Skyblock Classic -->
+                    <div class="bg-[#fbfcfa] border border-slate-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 relative group overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl group-hover:bg-blue-500/10 transition-colors"></div>
+                        <div>
+                            <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="cloud-lightning" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="font-display font-extrabold text-xl text-slate-900 mb-3">Skyblock Island</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                                Khởi đầu trên một hòn đảo lơ lửng hoang vắng cùng tài nguyên hạn hẹp. Sử dụng tư duy tối ưu hóa và máy tạo quặng tự động để biến đảo nhỏ thành đế chế vĩ đại.
+                            </p>
+                            <ul class="space-y-2.5 mb-8">
+                                <li class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+                                    <i data-lucide="check" class="w-4 h-4 text-blue-500"></i>
+                                    <span>Hệ thống máy phát quặng cấp cao</span>
+                                </li>
+                                <li class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+                                    <i data-lucide="check" class="w-4 h-4 text-blue-500"></i>
+                                    <span>Minion hỗ trợ tự động thu hoạch</span>
+                                </li>
+                                <li class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+                                    <i data-lucide="check" class="w-4 h-4 text-blue-500"></i>
+                                    <span>Bảng xếp hạng đảo (IS Top) tháng</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="copyServerIP('play.wibuland.io.vn')" class="w-full py-3 px-4 bg-blue-50 hover:bg-blue-500 hover:text-white text-blue-700 font-bold rounded-2xl transition-all text-sm flex items-center justify-center space-x-2">
+                            <span>Chơi Chế Độ Này</span>
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                        </button>
+                    </div>
+
+                    <!-- Practice PvP Arena -->
+                    <div class="bg-[#fbfcfa] border border-slate-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 relative group overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors"></div>
+                        <div>
+                            <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="swords" class="w-8 h-8"></i>
+                            </div>
+                            <h3 class="font-display font-extrabold text-xl text-slate-900 mb-3">PvP Arena Practice</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                                Nơi rèn luyện kỹ năng chiến đấu giáp lá cà, bắn cung cực hạn. Thách đấu 1vs1, tham gia đấu trường hỗn loạn hoặc thi đấu xếp hạng phân bậc đỉnh cao.
+                            </p>
+                            <ul class="space-y-2.5 mb-8">
+                                <li class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+                                    <i data-lucide="check" class="w-4 h-4 text-amber-500"></i>
+                                    <span>Tối ưu hóa Ping và TPS cực cao</span>
+                                </li>
+                                <li class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+                                    <i data-lucide="check" class="w-4 h-4 text-amber-500"></i>
+                                    <span>Hơn 15 loại Kits đấu khác nhau</span>
+                                </li>
+                                <li class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+                                    <i data-lucide="check" class="w-4 h-4 text-amber-500"></i>
+                                    <span>Hệ thống Rank Elo như game MOBA</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="copyServerIP('play.wibuland.io.vn')" class="w-full py-3 px-4 bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-700 font-bold rounded-2xl transition-all text-sm flex items-center justify-center space-x-2">
+                            <span>Chơi Chế Độ Này</span>
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PREMIUM SHOP SECTION -->
+        <section id="shop" class="py-16 sm:py-24 bg-gradient-to-b from-white to-emerald-50/20 border-t border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
+                    <span class="text-amber-600 font-bold text-xs sm:text-sm uppercase tracking-widest block">Cửa Hàng Server</span>
+                    <h2 class="font-display font-black text-3xl sm:text-4xl text-slate-900 tracking-tight">Ủng Hộ Duy Trì Máy Chủ</h2>
+                    <p class="text-slate-500 font-medium text-base sm:text-lg">Tất cả chi phí donate đều được tái đầu tư trực tiếp để thuê Server cấu hình mạnh và tổ chức sự kiện cho các bạn.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <!-- Package 1 -->
+                    <div class="bg-white border border-slate-200/60 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between hover:scale-[1.02] transition-transform">
+                        <div class="space-y-6">
+                            <div>
+                                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest block mb-2">GÓI VIP</span>
+                                <h4 class="font-display font-black text-3xl text-slate-900">VIP <span class="text-sm font-semibold text-slate-500">/ vĩnh viễn</span></h4>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed">Phù hợp cho người chơi mới muốn khởi đầu mượt mà với nhiều đặc quyền cơ bản.</p>
+                            <hr class="border-slate-100">
+                            <ul class="space-y-3.5 text-sm text-slate-600 font-medium">
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Tag Danh hiệu <b class="text-slate-800">[VIP]</b> trên khung chat</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Tự động kết nối khi phòng chờ đầy</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Tăng +3 số lượng Set Home tối đa</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="openPurchaseModal('VIP', '50.000đ')" class="w-full mt-8 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl text-sm transition-all shadow-md active:scale-95">
+                            Sở Hữu - 50k VNĐ
+                        </button>
+                    </div>
+
+                    <!-- Package 2 (POPULAR) -->
+                    <div class="bg-white border-2 border-emerald-500 rounded-3xl p-6 sm:p-8 shadow-xl relative flex flex-col justify-between hover:scale-[1.02] transition-transform">
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-500 text-white font-bold text-xs px-4 py-1.5 rounded-full shadow-md tracking-wider">
+                            ĐƯỢC YÊU THÍCH NHẤT
+                        </div>
+                        <div class="space-y-6">
+                            <div class="pt-2">
+                                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest block mb-2">GÓI VIP PRO</span>
+                                <h4 class="font-display font-black text-3xl text-slate-900">MVP <span class="text-sm font-semibold text-slate-500">/ vĩnh viễn</span></h4>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed">Cung cấp sức mạnh và công cụ bay lượn hỗ trợ xây dựng công trình vĩ mô cực đỉnh.</p>
+                            <hr class="border-slate-100">
+                            <ul class="space-y-3.5 text-sm text-slate-600 font-medium">
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Tag Danh hiệu <b class="text-emerald-600">[MVP]</b> rực rỡ</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Kích hoạt lệnh <b class="text-emerald-700">/fly</b> xây nhà cực nhanh</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>+10 Set Home tối đa & lệnh /feed</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Hiệu ứng hạt hào quang xung quanh</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="openPurchaseModal('MVP', '100.000đ')" class="w-full mt-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-emerald-200 active:scale-95">
+                            Sở Hữu - 100k VNĐ
+                        </button>
+                    </div>
+
+                    <!-- Package 3 -->
+                    <div class="bg-white border border-slate-200/60 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between hover:scale-[1.02] transition-transform">
+                        <div class="space-y-6">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest block mb-2">GÓI TỐI CAO</span>
+                                <h4 class="font-display font-black text-3xl text-slate-900">LEGEND <span class="text-sm font-semibold text-slate-500">/ vĩnh viễn</span></h4>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed">Trở thành huyền thoại đích thực của máy chủ với những công cụ độc quyền tối cao.</p>
+                            <hr class="border-slate-100">
+                            <ul class="space-y-3.5 text-sm text-slate-600 font-medium">
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Tag Danh hiệu <b class="text-indigo-600">[LEGEND]</b> lấp lánh</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Full toàn bộ lệnh VIP & MVP</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Khu vực VIP Mine độc quyền tốc độ cao</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i>
+                                    <span>Hỗ trợ tạo Shop bán hàng vô hạn</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button onclick="openPurchaseModal('LEGEND', '250.000đ')" class="w-full mt-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl text-sm transition-all shadow-md active:scale-95">
+                            Sở Hữu - 250k VNĐ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ SECTION -->
+        <section id="faq" class="py-16 sm:py-24 bg-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6">
+                <div class="text-center space-y-4 mb-16">
+                    <span class="text-emerald-600 font-bold text-xs sm:text-sm uppercase tracking-widest block">Giải Đáp Thắc Mắc</span>
+                    <h2 class="font-display font-black text-3xl sm:text-4xl text-slate-900 tracking-tight">Hỏi đáp thường gặp (FAQ)</h2>
+                    <p class="text-slate-500 font-medium">Bạn có câu hỏi? Chúng tôi có câu trả lời ngay phía dưới đây.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="border border-slate-200/80 rounded-2xl overflow-hidden transition-colors">
+                        <button class="w-full flex items-center justify-between p-5 text-left font-bold text-slate-800 hover:bg-slate-50 transition-colors focus:outline-none" onclick="toggleFaq(this)">
+                            <span>Làm sao để tôi có thể kết nối vào máy chủ chơi?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-200"></i>
+                        </button>
+                        <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="p-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                                Rất đơn giản! Hãy khởi động Minecraft (hỗ trợ cả Minecraft gốc lẫn các Launcher TLauncher, PojavLauncher trên điện thoại), vào mục <b>Chơi mạng (Multiplayer)</b> -> <b>Thêm máy chủ (Add Server)</b> -> Điền IP: <code class="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-bold font-mono text-xs">play.wibuland.io.vn</code> và nhấn <b>Hoàn tất (Done)</b> là có thể vào chơi.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200/80 rounded-2xl overflow-hidden transition-colors">
+                        <button class="w-full flex items-center justify-between p-5 text-left font-bold text-slate-800 hover:bg-slate-50 transition-colors focus:outline-none" onclick="toggleFaq(this)">
+                            <span>Tôi dùng điện thoại có chơi chung với máy tính được không?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-200"></i>
+                        </button>
+                        <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="p-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                                Hoàn toàn ĐƯỢC! Máy chủ hỗ trợ hệ thống liên kết GeyserMC. Người chơi điện thoại (Minecraft PE/Bedrock) và máy tính (Java) có thể gặp gỡ, trò chuyện và cùng nhau sinh tồn mượt mà trong một thế giới duy nhất.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200/80 rounded-2xl overflow-hidden transition-colors">
+                        <button class="w-full flex items-center justify-between p-5 text-left font-bold text-slate-800 hover:bg-slate-50 transition-colors focus:outline-none" onclick="toggleFaq(this)">
+                            <span>Tôi có thể tạo nhóm bạn bè (Town) chung không?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-200"></i>
+                        </button>
+                        <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="p-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                                Có chứ! Bạn có thể sử dụng các câu lệnh Towny như <code class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-mono text-xs">/t new [Tên_Town]</code> để tạo thị trấn của riêng mình, mời bạn bè vào sinh sống, bảo vệ rương hòm và lãnh thổ an toàn tuyệt đối.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200/80 rounded-2xl overflow-hidden transition-colors">
+                        <button class="w-full flex items-center justify-between p-5 text-left font-bold text-slate-800 hover:bg-slate-50 transition-colors focus:outline-none" onclick="toggleFaq(this)">
+                            <span>Hệ thống nạp thẻ hoạt động như thế nào?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 transition-transform duration-200"></i>
+                        </button>
+                        <div class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="p-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
+                                Chúng tôi hỗ trợ chuyển khoản ATM/MOMO tự động 100% hoặc nạp thẻ cào thông qua cổng thanh toán trên website/Discord. Chỉ cần nạp theo cú pháp hướng dẫn, hệ thống tự động thăng hạng VIP trong game trong vòng 1-3 phút.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- VIEW 2: WIKI SYSTEM (WIKI VIEW) -->
+    <div id="view-wiki" class="hidden min-h-screen bg-slate-50/50 border-t border-slate-100 pb-16">
+        
+        <!-- Sticky Sub-Navigation (Category Switcher for Mobile & Desktop) -->
+        <aside class="sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/60 p-3 lg:p-0 lg:border-none lg:bg-transparent lg:static">
+            <div class="max-w-7xl mx-auto lg:pt-10 lg:px-8">
+                <div class="grid lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Sidebar Navigation Column (Transforms to sliding tabs on mobile) -->
+                    <div class="lg:col-span-3 lg:sticky lg:top-24 bg-white lg:border lg:border-slate-200/80 lg:p-4 lg:rounded-3xl lg:shadow-sm">
+                        <h3 class="hidden lg:block font-display font-bold text-slate-400 text-xs uppercase tracking-wider mb-3 px-3">Danh mục Wiki</h3>
+                        
+                        <!-- Sliding Tab Bar container for Mobile / Flex Menu for Desktop -->
+                        <div class="flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-x-visible pb-1 lg:pb-0 scrollbar-none whitespace-nowrap lg:whitespace-normal">
+                            <a href="#wiki-welcome" class="wiki-link inline-flex items-center space-x-2 px-4 py-2.5 lg:py-3 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-emerald-50 text-emerald-700 active shrink-0">
+                                <i class="ph-fill ph-hand-waving text-base"></i>
+                                <span>Chào mừng tân thủ</span>
+                            </a>
+                            <a href="#wiki-commands" class="wiki-link inline-flex items-center space-x-2 px-4 py-2.5 lg:py-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-all shrink-0">
+                                <i class="ph-fill ph-terminal-window text-base"></i>
+                                <span>Lệnh cơ bản cần biết</span>
+                            </a>
+                            <a href="#wiki-enchantments" class="wiki-link inline-flex items-center space-x-2 px-4 py-2.5 lg:py-3 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-all shrink-0">
+                                <i class="ph-fill ph-magic-wand text-base"></i>
+                                <span>Custom Enchantments</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Main Wiki Contents Column -->
+                    <div class="lg:col-span-9 space-y-6 lg:space-y-8 mt-4 lg:mt-0">
+                        
+                        <!-- Section: Welcome -->
+                        <div id="wiki-welcome" class="wiki-section bg-white border border-slate-200/80 rounded-2xl lg:rounded-3xl p-5 lg:p-10 shadow-sm scroll-mt-36 lg:scroll-mt-24">
+                            <div class="flex items-center gap-3 mb-5 border-b border-slate-100 pb-4">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+                                    <i class="ph-fill ph-hand-waving"></i>
+                                </div>
+                                <h2 class="text-xl lg:text-2xl font-bold text-slate-900">Chào Mừng Đến Với Wiki WibuLand</h2>
+                            </div>
+                            <div class="prose max-w-none text-slate-600 space-y-4 leading-relaxed text-sm lg:text-base">
+                                <p>Xin chào chiến binh! Trang wiki này là cẩm nang hữu ích hỗ trợ bạn trong suốt quá trình xây dựng cơ đồ, phiêu lưu hầm ngục và học tập kỹ năng tại máy chủ <strong>WibuLand</strong>.</p>
+                                <div class="p-4 bg-amber-50 border border-amber-200/60 rounded-xl lg:rounded-2xl flex items-start space-x-3 text-xs sm:text-sm text-amber-800">
+                                    <i class="ph-fill ph-warning-circle text-lg shrink-0 mt-0.5"></i>
+                                    <span><strong>Mẹo tân thủ:</strong> Khi mới tham gia server lần đầu, hãy gõ lệnh <code class="bg-amber-100/50 px-1.5 py-0.5 rounded font-mono font-bold">/kit guest</code> để nhận trang bị bảo hộ khởi hành cơ bản miễn phí nhé!</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: Commands -->
+                        <div id="wiki-commands" class="wiki-section bg-white border border-slate-200/80 rounded-2xl lg:rounded-3xl p-5 lg:p-10 shadow-sm scroll-mt-36 lg:scroll-mt-24">
+                            <div class="flex items-center gap-3 mb-5 border-b border-slate-100 pb-4">
+                                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl shrink-0">
+                                    <i class="ph-fill ph-terminal-window"></i>
+                                </div>
+                                <h2 class="text-xl lg:text-2xl font-bold text-slate-900">Lệnh Cơ Bản Trong Game</h2>
+                            </div>
+                            
+                            <!-- Custom Mobile-Responsive Card Layout for Tables -->
+                            <div class="overflow-hidden">
+                                <!-- Desktop / Tablet Table View -->
+                                <table class="hidden sm:table w-full text-left border-collapse text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-200">
+                                            <th class="p-4 font-bold text-slate-800">Cú pháp lệnh</th>
+                                            <th class="p-4 font-bold text-slate-800">Mô tả tác dụng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100 text-slate-600">
+                                        <tr>
+                                            <td class="p-4"><code class="bg-slate-100 text-slate-800 px-2 py-1 rounded font-mono font-bold text-xs">/spawn</code></td>
+                                            <td class="p-4">Dịch chuyển tức thời về đảo hồi sinh trung tâm.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-4"><code class="bg-slate-100 text-slate-800 px-2 py-1 rounded font-mono font-bold text-xs">/t new [Tên]</code></td>
+                                            <td class="p-4">Khởi tạo một Thị Trấn (Town) của riêng bạn.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-4"><code class="bg-slate-100 text-slate-800 px-2 py-1 rounded font-mono font-bold text-xs">/t claim</code></td>
+                                            <td class="p-4">Mua vùng đất hiện tại bạn đứng để bảo vệ hòm đồ, tài sản.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-4"><code class="bg-slate-100 text-slate-800 px-2 py-1 rounded font-mono font-bold text-xs">/pay [Tên] [Số]</code></td>
+                                            <td class="p-4">Chuyển tiền xu trong tài khoản trực tiếp cho bạn chơi khác.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-4"><code class="bg-slate-100 text-slate-800 px-2 py-1 rounded font-mono font-bold text-xs">/ah</code></td>
+                                            <td class="p-4">Mở bảng chợ đen trực tuyến - nơi giao dịch vật phẩm của người chơi.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Mobile List View (Self-contained, touch-friendly cards) -->
+                                <div class="block sm:hidden space-y-3.5">
+                                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2">
+                                        <div class="flex items-center justify-between border-b border-slate-200/50 pb-2">
+                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cú pháp</span>
+                                            <code class="bg-slate-200/80 text-slate-800 px-2 py-0.5 rounded font-mono font-bold text-xs">/spawn</code>
+                                        </div>
+                                        <p class="text-xs font-medium text-slate-600 leading-relaxed"><span class="text-slate-400">Tác dụng:</span> Dịch chuyển tức thời về đảo hồi sinh trung tâm.</p>
+                                    </div>
+
+                                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2">
+                                        <div class="flex items-center justify-between border-b border-slate-200/50 pb-2">
+                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cú pháp</span>
+                                            <code class="bg-slate-200/80 text-slate-800 px-2 py-0.5 rounded font-mono font-bold text-xs">/t new [Tên]</code>
+                                        </div>
+                                        <p class="text-xs font-medium text-slate-600 leading-relaxed"><span class="text-slate-400">Tác dụng:</span> Khởi tạo một Thị Trấn (Town) của riêng bạn.</p>
+                                    </div>
+
+                                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2">
+                                        <div class="flex items-center justify-between border-b border-slate-200/50 pb-2">
+                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cú pháp</span>
+                                            <code class="bg-slate-200/80 text-slate-800 px-2 py-0.5 rounded font-mono font-bold text-xs">/t claim</code>
+                                        </div>
+                                        <p class="text-xs font-medium text-slate-600 leading-relaxed"><span class="text-slate-400">Tác dụng:</span> Mua vùng đất hiện tại bạn đứng để bảo vệ hòm đồ, tài sản.</p>
+                                    </div>
+
+                                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2">
+                                        <div class="flex items-center justify-between border-b border-slate-200/50 pb-2">
+                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cú pháp</span>
+                                            <code class="bg-slate-200/80 text-slate-800 px-2 py-0.5 rounded font-mono font-bold text-xs">/pay [Tên] [Số]</code>
+                                        </div>
+                                        <p class="text-xs font-medium text-slate-600 leading-relaxed"><span class="text-slate-400">Tác dụng:</span> Chuyển tiền xu trong tài khoản trực tiếp cho bạn chơi khác.</p>
+                                    </div>
+
+                                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2">
+                                        <div class="flex items-center justify-between border-b border-slate-200/50 pb-2">
+                                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cú pháp</span>
+                                            <code class="bg-slate-200/80 text-slate-800 px-2 py-0.5 rounded font-mono font-bold text-xs">/ah</code>
+                                        </div>
+                                        <p class="text-xs font-medium text-slate-600 leading-relaxed"><span class="text-slate-400">Tác dụng:</span> Mở bảng chợ đen trực tuyến - nơi giao dịch vật phẩm của người chơi.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Enchantments (DYNAMIC TABLE) -->
+                        <div id="wiki-enchantments" class="wiki-section bg-white border border-slate-200/80 rounded-2xl lg:rounded-3xl p-5 lg:p-10 shadow-sm scroll-mt-36 lg:scroll-mt-24">
+                            <div class="flex items-center gap-3 mb-5 border-b border-slate-100 pb-4">
+                                <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shrink-0">
+                                    <i class="ph-fill ph-magic-wand"></i>
+                                </div>
+                                <h2 class="text-xl lg:text-2xl font-bold text-slate-900">Custom Enchantments</h2>
+                            </div>
+                            
+                            <!-- Search Bar -->
+                            <div class="mb-5">
+                                <div class="relative max-w-md">
+                                    <i class="ph ph-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-base"></i>
+                                    <input type="text" id="search-enchants" onkeyup="filterEnchantments()" placeholder="Tìm tên, phân loại hoặc độ hiếm (VD: SUTHI)..." class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-shadow shadow-sm text-sm">
+                                </div>
+                            </div>
+
+                            <!-- Mobile view helper label -->
+                            <p class="block md:hidden text-slate-400 text-[11px] font-semibold uppercase tracking-wider mb-3">Hiển thị danh sách phù phép:</p>
+
+                            <!-- Data Container -->
+                            <!-- Under md screens, tables are disabled, JS renders structured blocks instead! -->
+                            <div class="bg-white md:rounded-2xl md:border md:border-slate-200/80 md:overflow-hidden md:shadow-sm">
+                                <!-- Desktop / Tablet Table Grid -->
+                                <div class="overflow-x-auto max-h-[600px] hidden md:block">
+                                    <table class="w-full text-left border-collapse min-w-[800px]">
+                                        <thead class="sticky top-0 bg-slate-50 border-b border-slate-200 z-10">
+                                            <tr>
+                                                <th class="p-4 font-semibold text-sm text-slate-900">Tên Phù Phép</th>
+                                                <th class="p-4 font-semibold text-sm text-slate-900 text-center">Cấp Max</th>
+                                                <th class="p-4 font-semibold text-sm text-slate-900">Độ Hiếm</th>
+                                                <th class="p-4 font-semibold text-sm text-slate-900">Áp Dụng Cho</th>
+                                                <th class="p-4 font-semibold text-sm text-slate-900">Mô Tả Hiệu Ứng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="enchantment-tbody-desktop" class="divide-y divide-slate-100">
+                                            <!-- Desktop table loads dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Mobile List (Transforms table row into highly organized responsive blocks) -->
+                                <div id="enchantment-tbody-mobile" class="block md:hidden space-y-4 max-h-[600px] overflow-y-auto pr-1">
+                                    <!-- Mobile cards loads dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-12 gap-10 mb-12">
+            <!-- Logo & Brand Description -->
+            <div class="md:col-span-5 space-y-4">
+                <a href="#" onclick="switchView('profile')" class="flex items-center space-x-3">
+                    <div id="footer-logo-icon" class="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-green-400 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-900/40">
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M5,5H19V9H17V7H15V9H13V7H11V9H9V7H7V9H5V5M19,19H5V11H7V13H9V11H11V13H13V11H15V13H17V11H19V19Z" />
+                        </svg>
+                    </div>
+                    <span id="footer-logo-text" class="font-display font-extrabold text-2xl text-white tracking-tight">Wibu<span class="text-blue-400">Land</span></span>
+                </a>
+                <p class="text-sm leading-relaxed max-w-sm text-slate-400">
+                    Nơi hội tụ những game thủ đam mê Minecraft sinh tồn, kiến tạo nên các vương quốc tuyệt vời nhất trên không gian số.
+                </p>
+                <div class="flex items-center space-x-4 pt-2">
+                    <a href="https://facebook.com" class="hover:text-white transition-colors p-2 bg-slate-800 rounded-xl" aria-label="Facebook">
+                        <i data-lucide="facebook" class="w-5 h-5"></i>
+                    </a>
+                    <a href="https://discord.gg/minecraft" class="hover:text-white transition-colors p-2 bg-slate-800 rounded-xl" aria-label="Discord">
+                        <i data-lucide="message-square" class="w-5 h-5"></i>
+                    </a>
+                    <a href="https://youtube.com" class="hover:text-white transition-colors p-2 bg-slate-800 rounded-xl" aria-label="Youtube">
+                        <i data-lucide="youtube" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Fast Nav -->
+            <div class="md:col-span-3 space-y-4">
+                <h4 class="font-bold text-white uppercase tracking-wider text-sm">Liên Kết Nhanh</h4>
+                <ul class="space-y-2.5 text-sm">
+                    <li><a href="#about" onclick="handleNavClick(event, 'about')" class="hover:text-white transition-colors">Giới thiệu Server</a></li>
+                    <li><a href="#modes" onclick="handleNavClick(event, 'modes')" class="hover:text-white transition-colors">Danh sách chế độ</a></li>
+                    <li><a href="#shop" onclick="handleNavClick(event, 'shop')" class="hover:text-white transition-colors">Mua Ranks VIP</a></li>
+                    <li><button onclick="switchView('wiki')" class="hover:text-white transition-colors text-left">Wiki hệ thống</button></li>
+                </ul>
+            </div>
+
+            <!-- Contact & Help -->
+            <div class="md:col-span-4 space-y-4">
+                <h4 class="font-bold text-white uppercase tracking-wider text-sm">Hỗ Trợ Người Chơi</h4>
+                <p class="text-sm text-slate-400 leading-relaxed">Nếu gặp bất kỳ sự cố kẹt acc, lỗi nạp thẻ, hãy liên hệ trực tiếp chúng tôi:</p>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center space-x-2">
+                        <i data-lucide="mail" class="w-4 h-4 text-emerald-400"></i>
+                        <span>support@wibuland.io.vn</span>
+                    </li>
+                    <li class="flex items-center space-x-2">
+                        <i data-lucide="help-circle" class="w-4 h-4 text-emerald-400"></i>
+                        <span>Discord ticket hệ thống hỗ trợ 24/7</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-slate-800/80 text-center text-xs text-slate-500 space-y-2">
+            <p>© 2026 WibuLand. All rights reserved.</p>
+            <p class="max-w-xl mx-auto leading-relaxed">Disclaimer: Trang web này không được liên kết trực tiếp, chứng nhận bởi Mojang Studios hoặc Microsoft Corporation. Minecraft là thương hiệu đăng ký thuộc về Mojang AB.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL MUA RANK -->
+    <div id="purchase-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closePurchaseModal()"></div>
+        <div class="bg-white border border-slate-100 rounded-3xl w-full max-w-md p-6 sm:p-8 relative z-10 shadow-2xl scale-95 transition-transform duration-300">
+            <button onclick="closePurchaseModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="space-y-4 text-center sm:text-left">
+                <div class="w-12 h-12 bg-amber-500/10 text-amber-500 rounded-2xl flex items-center justify-center mx-auto sm:mx-0">
+                    <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="font-display font-bold text-xl text-slate-900">Hướng Dẫn Sở Hữu Gói <span id="modal-rank-name" class="text-emerald-600 font-extrabold">VIP</span></h3>
+                    <p class="text-slate-500 text-sm mt-1">Cảm ơn bạn đã có ý định ủng hộ sự phát triển của máy chủ.</p>
+                </div>
+                
+                <div class="bg-slate-50 border border-slate-100 p-4 rounded-2xl space-y-3 text-left">
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400 uppercase">Cú pháp chuyển khoản:</span>
+                        <code id="modal-bank-syntax" class="block bg-white border border-slate-200 p-2.5 rounded-xl font-mono text-sm font-bold text-slate-800 mt-1 select-all">MADOSHOP [Ten_Nhan_Vat_Game] VIP</code>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-400 uppercase">Số tiền tương ứng:</span>
+                        <p id="modal-rank-price" class="text-lg font-extrabold text-slate-900 mt-0.5">100.000đ</p>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-500 leading-relaxed text-center">
+                    Hãy truy cập kênh <a href="https://discord.gg/minecraft" target="_blank" class="text-blue-500 hover:underline font-semibold">#mua-rank</a> tại Discord hoặc tạo Ticket để được nhân viên hỗ trợ kích hoạt trực tiếp sau 3 phút.
+                </p>
+
+                <div class="pt-2">
+                    <button onclick="closePurchaseModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-sm transition-all active:scale-95">
+                        Tôi Đã Hiểu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center space-x-3 text-sm font-semibold max-w-sm w-max border border-slate-800">
+        <div class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shrink-0">
+            <i data-lucide="check" class="w-3.5 h-3.5 stroke-[3px]"></i>
+        </div>
+        <span id="toast-message" class="truncate pr-2">Đã copy IP Server thành công!</span>
+    </div>
+
+    <!-- JAVASCRIPT & DATA -->
+    <script>
+        // Custom Enchantments Data Array
+        const enchantData = [
+            { name: "Thần Nông", target: "Hoes", rarity: "SUTHI", desc: "Có tỉ lệ thu hoạch trong khu 3x3.", maxLvl: 9 },
+            { name: "Đánh Cá", target: "Fishing Rod", rarity: "SUTHI", desc: "Tự động thu cần khi cá cắn câu.", maxLvl: 4 },
+            { name: "Giả Kim", target: "Pickaxe", rarity: "THANTHOAI", desc: "Có tỉ lệ biến quặng thành khối.", maxLvl: 3 },
+            { name: "Chuyên Gia Lúa Mì", target: "Hoes", rarity: "SUTHI", desc: "Trồng hạt lúa mì trong khu 3x3 shift + chuột phải để thực hiện.", maxLvl: 3 },
+            { name: "Chuyên Gia Khoai Tây", target: "Hoes", rarity: "SUTHI", desc: "Trồng khoai tây trong khu 3x3 shift + chuột phải để thực hiện.", maxLvl: 3 },
+            { name: "Chuyên Gia Cà Rốt", target: "Hoes", rarity: "SUTHI", desc: "Trồng cà rốt trong khu 3x3 shift + chuột phải để thực hiện.", maxLvl: 3 },
+            { name: "Tái Canh Tác", target: "Hoes", rarity: "HIEM", desc: "Tự trồng lại sau khi đập nông sản.", maxLvl: 1 },
+            { name: "Thiên Lôi", target: "Swords, Bow, Crossbow, Trident", rarity: "HIEM", desc: "Có cơ hội triệu hồi sét khi đánh trúng đối thủ", maxLvl: 3 },
+            { name: "Lao Nhân", target: "Trident", rarity: "SUTHI", desc: "Có tỉ lệ x2 sát thương khi phóng.", maxLvl: 5 },
+            { name: "Huyết Lệ", target: "Trident", rarity: "HUYENTHOAI", desc: "Có tỉ lệ làm cho đối thủ của bạn chảy máu khi cận chiến.", maxLvl: 4 },
+            { name: "Mềm Dẻo", target: "Boots", rarity: "SUTHI", desc: "Có tỉ lệ chặn sát thương rơi.", maxLvl: 3 },
+            { name: "Sải Cánh", target: "Boots", rarity: "THANTHOAI", desc: "Có thể bay khi đeo.", maxLvl: 1 },
+            { name: "Sức Sống Biển Cả", target: "Helmets", rarity: "THUONG", desc: "Giúp bạn thở dưới nước.", maxLvl: 1 },
+            { name: "Nung Nóng", target: "Pickaxes", rarity: "THUONG", desc: "Có cơ hội nung chảy khoáng sản.", maxLvl: 3 },
+            { name: "Kinh Nghiệm", target: "Tools", rarity: "THUONG", desc: "Cho tỉ lệ nhận nhiều kinh nghiệm hơn khi khai thác khoáng sản", maxLvl: 5 },
+            { name: "Thần Tốc Khai Phá", target: "Tools", rarity: "THUONG", desc: "Có tỉ lệ nhận hiệu ứng đào nhanh khi phá vỡ các khối", maxLvl: 3 },
+            { name: "Vội Vàng", target: "Tools", rarity: "THANTHOAI", desc: "Giúp công cụ đào nhanh hơn.", maxLvl: 3 },
+            { name: "Thủy Sinh", target: "Pickaxe", rarity: "THUONG", desc: "Có cơ hội nhận thêm không khí khi khai thác dưới nước.", maxLvl: 2 },
+            { name: "Cú Đêm", target: "Helmet", rarity: "THUONG", desc: "Cho khả năng nhìn trong bóng tối.", maxLvl: 1 },
+            { name: "Đao Phủ", target: "Swords, Axes", rarity: "THUONG", desc: "Có tỉ lệ nhận đầu người chơi khi giết đối phương", maxLvl: 3 },
+            { name: "Tường Lực", target: "Swords", rarity: "THUONG", desc: "Có cơ hội đẩy lùi đối thủ.", maxLvl: 5 },
+            { name: "Đói Khát", target: "Weapons", rarity: "HIEM", desc: "Có tỉ lệ làm đối thủ đói.", maxLvl: 4 },
+            { name: "Cuồng Loạn", target: "Swords, Axes", rarity: "HIEM", desc: "Có tỉ lệ nhân hiệu ứng sức mạnh và đào chậm.", maxLvl: 5 },
+            { name: "Đáp Trả", target: "Armor", rarity: "SIEUHIEM", desc: "Hấp thu sát thương của đối thủ và phản lại", maxLvl: 5 },
+            { name: "Khóa Đòn", target: "Armor", rarity: "HIEM", desc: "Có tỉ lệ chặn sát thương của đối thủ.", maxLvl: 4 },
+            { name: "Bùng Nổ", target: "Bow, Crossbow", rarity: "HIEM", desc: "Bắn ra mũi tên gây nổ.", maxLvl: 5 },
+            { name: "Lông Hồng", target: "Swords, Axes", rarity: "HIEM", desc: "Có cơ hội nhận hiệu ứng vội vàng.", maxLvl: 3 },
+            { name: "Lưỡi Câu Sắc Bén", target: "Fishing Rod", rarity: "HUYENTHOAI", desc: "Gây sát thương bằng cần câu.", maxLvl: 10 },
+            { name: "Lươi Câu Tẩm Độc", target: "Fishing Rod", rarity: "SUTHI", desc: "Gây độc khi móc vào đối thủ.", maxLvl: 3 },
+            { name: "Lưỡi Câu Bùng Cháy", target: "Fishing Rod", rarity: "SIEUHIEM", desc: "Gây cháy khi sử dụng.", maxLvl: 3 },
+            { name: "Hỏa Thiêu", target: "Armor", rarity: "HIEM", desc: "Có tỉ lệ khiến đối thủ cháy.", maxLvl: 4 },
+            { name: "Gặm Nhấm", target: "Swords, Axes", rarity: "HIEM", desc: "Có tỉ lệ hồi thức ăn khi tấn công đối thủ", maxLvl: 4 },
+            { name: "Khai Mỏ", target: "Pickaxes", rarity: "SIEUHIEM", desc: "Đào khoáng sản theo mạch quặng.", maxLvl: 3 },
+            { name: "Thu Gom", target: "Tools", rarity: "HIEM", desc: "Tự nhặt các khối bị phá", maxLvl: 4 },
+            { name: "Món Quà Gây Nổ", target: "Leggings", rarity: "HIEM", desc: "Triệu hồi ra creeper bảo vệ bạn khi bạn gần chết.", maxLvl: 8 },
+            { name: "Thợ Săn Ender", target: "Weapons", rarity: "SIEUHIEM", desc: "Tăng sát thương gây ra cho EnderMan và EnderDragon", maxLvl: 5 },
+            { name: "Diệt Xác Sống", target: "Swords, Axes", rarity: "THUONG", desc: "Tăng sát thương gây ra cho zombie", maxLvl: 5 },
+            { name: "Nghiền Sọ", target: "Swords, Axes", rarity: "THUONG", desc: "Tăng sát thương gây ra cho skeleton.", maxLvl: 3 },
+            { name: "Thiêu Tế", target: "Swords, Axes", rarity: "SIEUHIEM", desc: "Tăng sát thương gây ra cho spider.", maxLvl: 3 },
+            { name: "Thợ Săn", target: "Swords, Axes", rarity: "HIEM", desc: "Tăng sát thương gây ra cho mob thụ động.", maxLvl: 4 },
+            { name: "Truy Kích", target: "Bow, Crossbow, Trident", rarity: "HIEM", desc: "Tăng sát thương gây ra cho mob thụ động.", maxLvl: 4 },
+            { name: "Sát Phạt", target: "Swords, Axes", rarity: "HUYENTHOAI", desc: "Tăng sát thương gây ra cho mob thù địch.", maxLvl: 4 },
+            { name: "Thủy Thủ", target: "Fishing Rod", rarity: "SIEUHIEM", desc: "Nhận thêm kinh nghiệm khi câu cá.", maxLvl: 3 },
+            { name: "Ngư Dân May Mắn", target: "Fishing Rod", rarity: "HUYENTHOAI", desc: "Có tỉ lệ nhận thêm vật phẩm khi câu cá.", maxLvl: 3 },
+            { name: "Tay Quỷ", target: "Fishing Rod", rarity: "SIEUHIEM", desc: "Kéo đối phương lại gần.", maxLvl: 3 },
+            { name: "Phúc Lộc", target: "Fishing Rod", rarity: "SUTHI", desc: "Nhận hiệu ứng may mắn khi câu cá.", maxLvl: 3 },
+            { name: "Permafrost", target: "Swords", rarity: "SUTHI", desc: "Khiến đối thủ chậm chạp và bị chảy máu", maxLvl: 5 },
+            { name: "Vô Hồn", target: "Bow, Crossbow, Trident", rarity: "HIEM", desc: "Tăng sát thương gây ra cho Mob thù địch.", maxLvl: 4 },
+            { name: "Reaper", target: "Axe", rarity: "SIEUHIEM", desc: "Có cơ hội khiến đối thủ bị mù quáng và khô héo.", maxLvl: 4 },
+            { name: "Thợ Săn Địa Ngục", target: "Weapons", rarity: "SIEUHIEM", desc: "Tăng sát thương gây ra cho mob địa ngục.", maxLvl: 5 },
+            { name: "Che Mắt", target: "Swords", rarity: "SIEUHIEM", desc: "Có tỉ lệ làm đối thủ bị mù khi tấn công", maxLvl: 3 },
+            { name: "Sải Tay", target: "Swords", rarity: "SIEUHIEM", desc: "Kéo mob lại gần bạn khi tấn công", maxLvl: 3 },
+            { name: "Băng Giá", target: "Armor", rarity: "SIEUHIEM", desc: "Có tỉ lệ làm chậm đối thủ", maxLvl: 3 },
+            { name: "Tê Liệt", target: "Swords, Axes", rarity: "SIEUHIEM", desc: "Khiến đối thủ bị sét đánh và nhận hiệu ứng chậm và độc", maxLvl: 4 },
+            { name: "Độc Dược", target: "Swords, Axes", rarity: "SIEUHIEM", desc: "Có tỉ lệ gây độc cho đối thủ.", maxLvl: 3 },
+            { name: "Virus", target: "Bow, Crossbow, Trident", rarity: "HIEM", desc: "Có tỉ lệ gây độc cho mục tiêu", maxLvl: 3 },
+            { name: "Độc Tố", target: "Armor", rarity: "SIEUHIEM", desc: "Khiến kẻ tấn công bị độc.", maxLvl: 4 },
+            { name: "Tái Tạo", target: "Weapons and tools", rarity: "SIEUHIEM", desc: "Kiếm và công cụ tự hồi độ bền khiến nó lâu bị hỏng hơn.", maxLvl: 10 },
+            { name: "Nặng Nề", target: "Bows", rarity: "SIEUHIEM", desc: "Có tỉ lệ gây chậm chạp và mệt mỏi bằng mũi tên.", maxLvl: 4 },
+            { name: "Lò Xo", target: "Boots", rarity: "SIEUHIEM", desc: "Giúp bạn nhảy cao hơn.", maxLvl: 3 },
+            { name: "Mưu Mẹo", target: "Boots", rarity: "SIEUHIEM", desc: "Khi bị đánh sẽ có tỉ lệ triệu hồi ra zombie đánh lạc hướng kẻ thù", maxLvl: 10 },
+            { name: "Dọa Nạt", target: "Armor", rarity: "SIEUHIEM", desc: "Có tỉ lệ khiến đối thủ suy giảm tinh thần làm yếu đuối", maxLvl: 6 },
+            { name: "Khô Héo", target: "Armor", rarity: "SIEUHIEM", desc: "Khiến đối thủ bị khô héo.", maxLvl: 5 },
+            { name: "Đại Kiếm", target: "Sword", rarity: "SIEUHIEM", desc: "Đòn đánh cực mạnh vào những đối thủ đang giương cung", maxLvl: 5 },
+            { name: "Khắc Phục", target: "Armor", rarity: "HUYENTHOAI", desc: "Hồi phục độ bền khi bị mob đánh.", maxLvl: 3 },
+            { name: "Tẩu Thoát", target: "Boots", rarity: "SIEUHIEM", desc: "Bay vào không trung khi thấp máu.", maxLvl: 3 },
+            { name: "Thanh Tẩy", target: "Swords", rarity: "SUTHI", desc: "Có cơ hội xóa bỏ mọi hiệu ứng xấu khi đánh", maxLvl: 4 },
+            { name: "Đào Hầm", target: "Pickaxes, Shovels", rarity: "THANTHOAI", desc: "Có cơ hội đào 3x3.", maxLvl: 9 },
+            { name: "Thủ Vệ", target: "Armor", rarity: "SUTHI", desc: "Có tỉ lệ triệu hồi người sắt để bảo vệ bạn", maxLvl: 10 },
+            { name: "Nam Châm", target: "Swords", rarity: "SIEUHIEM", desc: "Đòn đánh của bạn kéo người chơi về phía bạn", maxLvl: 3 }
+        ];
+
+        // Rarity Priority Map for sorting (Mythic down to Common)
+        const rarityPriority = {
+            'THANTHOAI': 1,
+            'HUYENTHOAI': 2,
+            'SUTHI': 3,
+            'SIEUHIEM': 4,
+            'HIEM': 5,
+            'THUONG': 6
+        };
+
+        // Render Custom Enchantments Table & Mobile Cards Dual-View
+        function renderTable(data) {
+            const tbodyDesktop = document.getElementById('enchantment-tbody-desktop');
+            const tbodyMobile = document.getElementById('enchantment-tbody-mobile');
+            
+            let desktopHtml = '';
+            let mobileHtml = '';
+            
+            if (data.length === 0) {
+                const emptyMsg = `
+                    <div class="text-center text-slate-500 font-semibold py-8">
+                        Không tìm thấy phù phép nào phù hợp.
+                    </div>
+                `;
+                tbodyDesktop.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-slate-500 font-semibold">Không tìm thấy phù phép nào phù hợp.</td></tr>';
+                tbodyMobile.innerHTML = emptyMsg;
+                return;
+            }
+
+            data.forEach(enc => {
+                let bgClass = '', textClass = '', borderClass = '', vniRarity = '';
+                switch(enc.rarity) {
+                    case 'THANTHOAI': 
+                        bgClass = 'bg-red-50'; textClass = 'text-red-700'; borderClass = 'border-red-200'; vniRarity = 'Thần Thoại'; break;
+                    case 'HUYENTHOAI': 
+                        bgClass = 'bg-amber-50'; textClass = 'text-amber-700'; borderClass = 'border-amber-200'; vniRarity = 'Huyền Thoại'; break;
+                    case 'SUTHI': 
+                        bgClass = 'bg-purple-50'; textClass = 'text-purple-700'; borderClass = 'border-purple-200'; vniRarity = 'Sử Thi'; break;
+                    case 'SIEUHIEM': 
+                        bgClass = 'bg-blue-50'; textClass = 'text-blue-700'; borderClass = 'border-blue-200'; vniRarity = 'Siêu Hiếm'; break;
+                    case 'HIEM': 
+                        bgClass = 'bg-green-50'; textClass = 'text-green-700'; borderClass = 'border-green-200'; vniRarity = 'Hiếm'; break;
+                    case 'THUONG': 
+                        bgClass = 'bg-slate-100/60'; textClass = 'text-slate-600'; borderClass = 'border-slate-200'; vniRarity = 'Thường'; break;
+                    default: 
+                        bgClass = 'bg-slate-100'; textClass = 'text-slate-600'; borderClass = 'border-slate-200'; vniRarity = enc.rarity;
+                }
+
+                // Append Desktop Row
+                desktopHtml += `
+                <tr class="hover:bg-slate-50/80 transition-colors border-b border-slate-100 last:border-0">
+                    <td class="p-4">
+                        <div class="font-bold text-slate-900">${enc.name}</div>
+                    </td>
+                    <td class="p-4 text-sm font-bold text-slate-700 text-center">${enc.maxLvl}</td>
+                    <td class="p-4">
+                        <span class="px-2.5 py-1 text-[10px] font-black rounded-lg border ${bgClass} ${textClass} ${borderClass} uppercase tracking-wider whitespace-nowrap">${vniRarity}</span>
+                    </td>
+                    <td class="p-4 text-xs font-bold text-slate-500">${enc.target}</td>
+                    <td class="p-4 text-sm text-slate-600 font-medium">${enc.desc}</td>
+                </tr>
+                `;
+
+                // Append Mobile Card
+                mobileHtml += `
+                <div class="bg-slate-50/70 border border-slate-200/60 rounded-xl p-4 space-y-3 shadow-sm hover:border-emerald-200 transition-colors">
+                    <div class="flex items-center justify-between border-b border-slate-200/50 pb-2.5">
+                        <span class="font-bold text-sm text-slate-900">${enc.name}</span>
+                        <span class="px-2.5 py-0.5 text-[9px] font-black rounded border ${bgClass} ${textClass} ${borderClass} uppercase tracking-wider whitespace-nowrap">${vniRarity}</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <span class="block text-slate-400 text-[10px] font-bold uppercase">Cấp Tối Đa</span>
+                            <span class="font-bold text-slate-700 text-sm">${enc.maxLvl}</span>
+                        </div>
+                        <div>
+                            <span class="block text-slate-400 text-[10px] font-bold uppercase">Áp Dụng Cho</span>
+                            <span class="font-bold text-slate-500 truncate block">${enc.target}</span>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-slate-200/40 text-xs text-slate-600 leading-relaxed font-medium">
+                        <span class="text-slate-400 text-[10px] font-bold uppercase block mb-0.5">Mô Tả Hiệu Ứng</span>
+                        ${enc.desc}
+                    </div>
+                </div>
+                `;
+            });
+            
+            tbodyDesktop.innerHTML = desktopHtml;
+            tbodyMobile.innerHTML = mobileHtml;
+        }
+
+        // Search Filter Logic
+        function filterEnchantments() {
+            const query = document.getElementById('search-enchants').value.toLowerCase().trim();
+            const filtered = enchantData.filter(enc => 
+                enc.name.toLowerCase().includes(query) || 
+                enc.rarity.toLowerCase().includes(query) ||
+                enc.target.toLowerCase().includes(query) ||
+                enc.desc.toLowerCase().includes(query)
+            );
+            renderTable(filtered);
+        }
+
+        // SPA Navigation View Switcher Logic
+        let currentView = 'profile';
+        function switchView(view) {
+            if (currentView === view) {
+                window.scrollTo({top: 0, behavior: 'smooth'});
+                return;
+            }
+
+            const profileView = document.getElementById('view-profile');
+            const wikiView = document.getElementById('view-wiki');
+            const profileNavLinks = document.getElementById('nav-profile-links');
+            const mobileProfileLinks = document.getElementById('mobile-profile-links');
+            
+            const navBtnHome = document.getElementById('nav-btn-home');
+            const navBtnWiki = document.getElementById('nav-btn-wiki');
+            const navLogoIcon = document.getElementById('nav-logo-icon');
+
+            if (view === 'wiki') {
+                profileView.classList.add('hidden');
+                wikiView.classList.remove('hidden');
+                if (profileNavLinks) profileNavLinks.classList.add('hidden');
+                if (mobileProfileLinks) mobileProfileLinks.classList.add('hidden');
+                
+                // Active Button styling swapping
+                navBtnHome.className = "font-medium text-slate-600 hover:text-emerald-600 transition-colors py-2 px-3 rounded-lg";
+                navBtnWiki.className = "font-bold text-emerald-600 transition-colors py-2 px-3 rounded-lg bg-emerald-50";
+                
+                navLogoIcon.classList.remove('from-emerald-500', 'to-green-400');
+                navLogoIcon.classList.add('from-purple-500', 'to-indigo-400');
+                
+                currentView = 'wiki';
+            } else {
+                wikiView.classList.add('hidden');
+                profileView.classList.remove('hidden');
+                if (profileNavLinks) profileNavLinks.classList.remove('hidden');
+                if (mobileProfileLinks) mobileProfileLinks.classList.remove('hidden');
+                
+                // Active Button styling swapping
+                navBtnHome.className = "font-bold text-emerald-600 transition-colors py-2 px-3 rounded-lg bg-emerald-50";
+                navBtnWiki.className = "font-medium text-slate-600 hover:text-emerald-600 transition-colors py-2 px-3 rounded-lg";
+                
+                navLogoIcon.classList.remove('from-purple-500', 'to-indigo-400');
+                navLogoIcon.classList.add('from-emerald-500', 'to-green-400');
+                
+                currentView = 'profile';
+            }
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // Bridge anchor links click to Profile view before scrolling
+        function handleNavClick(event, targetId) {
+            if (currentView !== 'profile') {
+                event.preventDefault();
+                switchView('profile');
+                setTimeout(() => {
+                    const el = document.getElementById(targetId);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        }
+
+        // TOC Highlight script for Wiki Sidebar Navigation
+        const wikiSections = document.querySelectorAll('.wiki-section');
+        const wikiLinks = document.querySelectorAll('.wiki-link');
+
+        window.addEventListener('scroll', () => {
+            if (currentView !== 'wiki') return;
+            let current = '';
+            wikiSections.forEach(section => {
+                if (scrollY >= (section.offsetTop - 220)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            wikiLinks.forEach(link => {
+                link.classList.remove('bg-emerald-50', 'text-emerald-700', 'active');
+                link.classList.add('text-slate-600');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.remove('text-slate-600');
+                    link.classList.add('bg-emerald-50', 'text-emerald-700', 'active');
+                    
+                    // Auto scroll the sliding tab bar container on mobile so active tab is visible
+                    const tabContainer = link.parentElement;
+                    if (window.innerWidth < 1024 && tabContainer) {
+                        const tabOffset = link.offsetLeft - tabContainer.offsetLeft;
+                        tabContainer.scrollTo({
+                            left: tabOffset - (tabContainer.clientWidth / 2) + (link.clientWidth / 2),
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Toggle Mobile Menu Button
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            if (isOpen) {
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        });
+
+        // Close mobile menu when selecting option
+        const mobileLinks = mobileMenu.querySelectorAll('a, button');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.setAttribute('data-lucide', 'menu');
+                lucide.createIcons();
+            });
+        });
+
+        // FAQ Toggle System
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                content.style.maxHeight = '0px';
+                icon.style.transform = 'rotate(0deg)';
+                button.classList.remove('bg-emerald-50/40');
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+                button.classList.add('bg-emerald-50/40');
+            }
+        }
+
+        // Copy Server IP Toast Notification
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.innerText = message;
+            
+            clearTimeout(toastTimeout);
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3500);
+        }
+
+        function copyServerIP(ip) {
+            const tempInput = document.createElement("input");
+            tempInput.value = ip;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast(`Đã sao chép địa chỉ IP "${ip}" vào bộ nhớ tạm!`);
+                } else {
+                    showToast("Sao chép thất bại, hãy nhập thủ công.");
+                }
+            } catch (err) {
+                showToast("Đã xảy ra lỗi khi sao chép.");
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        // Purchase Modals Logic
+        function openPurchaseModal(rankName, price) {
+            const modal = document.getElementById('purchase-modal');
+            const modalRank = document.getElementById('modal-rank-name');
+            const modalSyntax = document.getElementById('modal-bank-syntax');
+            const modalPrice = document.getElementById('modal-rank-price');
+
+            modalRank.innerText = rankName;
+            modalPrice.innerText = price;
+            modalSyntax.innerText = `MADOSHOP [Ten_Nhan_Vat] ${rankName.toUpperCase()}`;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.querySelector('.bg-white').classList.remove('scale-95');
+                modal.querySelector('.bg-white').classList.add('scale-100');
+            }, 50);
+        }
+
+        function closePurchaseModal() {
+            const modal = document.getElementById('purchase-modal');
+            modal.querySelector('.bg-white').classList.remove('scale-100');
+            modal.querySelector('.bg-white').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
+        }
+
+        // Live Minecraft Server Status Retriever (mcsvstat.us)
+        const statusResultContainer = document.getElementById('status-result');
+
+        async function fetchServerStatus(ip) {
+            statusResultContainer.innerHTML = `
+                <div class="text-center text-slate-500 py-4">
+                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-emerald-500"></i>
+                    <p class="text-sm font-semibold">Đang truy xuất thông tin từ API...</p>
+                </div>
+            `;
+            lucide.createIcons();
+
+            try {
+                const response = await fetch(`https://api.mcsrvstat.us/2/${ip}`);
+                if (!response.ok) throw new Error("API Connection Failed");
+                
+                const data = await response.json();
+                
+                if (data.online) {
+                    const motdText = (data.motd && data.motd.clean) ? data.motd.clean.join(' <br> ') : "Không có mô tả.";
+                    const playersCount = data.players.online;
+                    const playersMax = data.players.max;
+                    const version = data.version || "Không rõ";
+
+                    if (ip === "play.wibuland.io.vn") {
+                        document.getElementById('hero-online-count').innerText = `${playersCount}+`;
+                    }
+
+                    statusResultContainer.innerHTML = `
+                        <div class="w-full space-y-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                                <div>
+                                    <span class="text-xs font-semibold text-slate-400 uppercase">Địa chỉ máy chủ</span>
+                                    <h4 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                                        ${ip}
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                                            Online
+                                        </span>
+                                    </h4>
+                                </div>
+                                <div class="text-left sm:text-right">
+                                    <span class="block text-xs font-semibold text-slate-400 uppercase">Số người chơi</span>
+                                    <span class="text-2xl font-black text-emerald-600">${playersCount} <span class="text-slate-400 text-sm font-semibold">/ ${playersMax}</span></span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid sm:grid-cols-2 gap-4 text-sm">
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-100">
+                                    <span class="block text-xs font-semibold text-slate-400 uppercase mb-1">Mô tả (MOTD)</span>
+                                    <p class="font-mono text-xs text-slate-600 leading-relaxed">${motdText}</p>
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-100 flex flex-col justify-between">
+                                    <div>
+                                        <span class="block text-xs font-semibold text-slate-400 uppercase mb-1">Phiên bản hỗ trợ</span>
+                                        <p class="font-bold text-slate-700 text-sm">${version}</p>
+                                    </div>
+                                    <button onclick="copyServerIP('${ip}')" class="w-full mt-3 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs transition-all flex items-center justify-center space-x-1">
+                                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                        <span>Copy IP Này</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    statusResultContainer.innerHTML = `
+                        <div class="text-center py-6 text-slate-500">
+                            <div class="w-12 h-12 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i data-lucide="cloud-off" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-base">Máy chủ hiện đang Offline</h4>
+                            <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Vui lòng kiểm tra lại tính chính xác của địa chỉ IP hoặc máy chủ mục tiêu đang tạm ngưng hoạt động để bảo trì.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusResultContainer.innerHTML = `
+                    <div class="text-center py-6 text-slate-500">
+                        <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-base">Không thể truy xuất dữ liệu</h4>
+                        <p class="text-xs text-slate-400 mt-1">Đã có lỗi xảy ra hoặc API đang quá tải. Hãy thử kiểm tra lại sau ít phút.</p>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        function checkTargetServer() {
+            const inputIP = document.getElementById('target-server-ip').value.trim();
+            if (inputIP) {
+                fetchServerStatus(inputIP);
+            } else {
+                showToast("Vui lòng nhập một địa chỉ IP hợp lệ!");
+            }
+        }
+
+        // Initialize Web on load
+        window.onload = function() {
+            // Sort Custom Enchantments by Rarity Priority
+            enchantData.sort((a, b) => {
+                const priorityA = rarityPriority[a.rarity] || 99;
+                const priorityB = rarityPriority[b.rarity] || 99;
+                return priorityA - priorityB;
+            });
+
+            // Render table
+            renderTable(enchantData);
+
+            // Fetch default Server Status
+            fetchServerStatus('play.wibuland.io.vn');
+            
+            // Lucide initialize
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
