@@ -19,6 +19,7 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <script>
+        // config tailwind
         tailwind.config = {
             theme: {
                 extend: {
@@ -63,7 +64,6 @@
     </script>
 
     <style>
-        /* Hiệu ứng loading màn hình khởi động chung */
         #preloader {
             position: fixed;
             inset: 0;
@@ -113,13 +113,11 @@
         }
         .hover-glow-card:hover::after { opacity: 1; }
 
-        /* Tùy chỉnh thanh cuộn trình duyệt */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #ffffff; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
-        /* Đường viền Input chuyển động thông minh */
         .input-wrapper { position: relative; }
         .input-wrapper::after {
             content: '';
@@ -133,7 +131,6 @@
         }
         .input-wrapper:focus-within::after { width: 100%; left: 0; }
 
-        /* WibuLand custom styles */
         .mc-shadow { box-shadow: 0 8px 30px rgb(0 0 0 / 0.04); }
         .text-gradient {
             background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
@@ -144,6 +141,52 @@
         .scrollbar-none {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+
+        .wl-card-interactive {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .wl-card-interactive:hover {
+            transform: translateY(-8px);
+        }
+        .wl-glow-emerald:hover {
+            box-shadow: 0 20px 35px -10px rgba(16, 185, 129, 0.18);
+            border-color: rgba(16, 185, 129, 0.35);
+        }
+        .wl-glow-blue:hover {
+            box-shadow: 0 20px 35px -10px rgba(59, 130, 246, 0.18);
+            border-color: rgba(59, 130, 246, 0.35);
+        }
+        .wl-glow-amber:hover {
+            box-shadow: 0 20px 35px -10px rgba(245, 158, 11, 0.18);
+            border-color: rgba(245, 158, 11, 0.35);
+        }
+        .wl-glow-indigo:hover {
+            box-shadow: 0 20px 35px -10px rgba(99, 102, 241, 0.18);
+            border-color: rgba(99, 102, 241, 0.35);
+        }
+
+        @keyframes shimmer-shine {
+            0% { transform: translateX(-150%) skewX(-25deg); }
+            100% { transform: translateX(150%) skewX(-25deg); }
+        }
+        .shimmer-card {
+            position: relative;
+            overflow-x: visible;
+        }
+        .shimmer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: translateX(-150%) skewX(-25deg);
+            animation: shimmer-shine 4.5s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 10;
         }
     </style>
 </head>
@@ -160,9 +203,7 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- DỰ ÁN 1: PORTFOLIO CÁ NHÂN (ĐÀO MINH KHÔI) -->
-    <!-- ========================================== -->
+    <!-- DỰ ÁN 1: PORTFOLIO -->
     <div id="section-portfolio" class="hidden">
         
         <!-- Scroll Progress Indicator -->
@@ -179,9 +220,6 @@
                 
                 <!-- Logo with abstract developer icon -->
                 <div class="flex items-center space-x-2 cursor-pointer group shrink-0" onclick="scrollToSection('home')">
-                    <!--div class="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-emerald-400 shadow-sm shadow-slate-900/10 group-hover:rotate-6 group-hover:scale-105 transition-all duration-300">
-                        <i class="ph-bold ph-terminal-window text-xl"></i>
-                    </div-->
                     <span class="font-bold text-base sm:text-lg tracking-tight text-slate-900 group-hover:text-emerald-600 transition-colors duration-300">
                         KhoiDao
                     </span>
@@ -295,21 +333,6 @@
                             </div>
                         </div>
 
-                        <!-- Highlights -->
-                        <!--div class="reveal reveal-left pt-6 border-t border-slate-100 flex items-center space-x-8 sm:space-x-12" data-delay="500">
-                            <div class="group cursor-default">
-                                <span class="block text-3xl font-extrabold text-slate-900 tracking-tight group-hover:text-emerald-600 transition-colors duration-300">01+</span>
-                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mt-0.5">Năm Kinh Nghiệm</span>
-                            </div>
-                            <div class="group cursor-default">
-                                <span class="block text-3xl font-extrabold text-slate-900 tracking-tight group-hover:text-emerald-600 transition-colors duration-300">01+</span>
-                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mt-0.5">Dự Án Hoàn Thành</span>
-                            </div>
-                            <div class="group cursor-default">
-                                <span class="block text-3xl font-extrabold text-slate-900 tracking-tight group-hover:text-emerald-600 transition-colors duration-300">100%</span>
-                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mt-0.5">Hài Lòng</span>
-                            </div>
-                        </div-->
                     </div>
 
                     <!-- Right Graphic (Upgraded modern IDE/code window visualization) -->
@@ -547,9 +570,6 @@
                     <div class="reveal reveal-up" data-delay="200">
                         <div class="flex items-center flex-wrap gap-2 mt-6 md:mt-0 bg-white p-1 rounded-full border border-slate-200/60 max-w-max shadow-sm">
                             <button onclick="filterProjects('all')" class="filter-btn px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 text-white bg-emerald-600 shadow-sm" data-category="all">Tất cả</button>
-                            <!--button onclick="filterProjects('profile')" class="filter-btn px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 text-slate-500 hover:text-slate-900 hover:bg-slate-50" data-category="profile">Profile</button>
-                            <button onclick="filterProjects('mobile')" class="filter-btn px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 text-slate-500 hover:text-slate-900 hover:bg-slate-50" data-category="mobile">Mobile</button>
-                            <button onclick="filterProjects('design')" class="filter-btn px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 text-slate-500 hover:text-slate-900 hover:bg-slate-50" data-category="design">UI/UX</button-->
                         </div>
                     </div>
                 </div>
@@ -597,87 +617,6 @@
                             </div>
                         </div>
                     </article>
-
-
-                    <!--article class="project-card reveal reveal-up group bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full" data-category="mobile" data-delay="250">
-                        <div class="h-48 bg-gradient-to-br from-teal-500/20 to-green-500/10 flex items-center justify-center p-6 border-b border-slate-100/50 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-emerald-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <svg viewBox="0 0 100 60" fill="none" class="w-full h-full text-emerald-600/40 group-hover:scale-105 group-hover:rotate-1 transition-transform duration-500">
-                                <rect x="35" y="8" width="30" height="44" rx="4" stroke="currentColor" stroke-width="2" />
-                                <circle cx="50" cy="46" r="2" fill="currentColor" />
-                                <path d="M42 22 L47 27 L58 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                <rect x="42" y="32" width="16" height="4" rx="1" fill="currentColor" fill-opacity="0.2" />
-                            </svg>
-                            <div class="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full border border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                                mobile
-                            </div>
-                        </div>
-                        <div class="p-6 flex-grow flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-lg text-slate-900 group-hover:text-emerald-700 transition-colors mb-2 leading-snug">
-                                    Ứng dụng Tài chính Cá nhân FinTrack
-                                </h3>
-                                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4">
-                                    Ứng dụng di động giúp người dùng theo dõi chi tiêu cá nhân tự động bằng AI, phân tích thói quen mua sắm và tối ưu dòng tiền.
-                                </p>
-                            </div>
-                            <div>
-                                <div class="flex flex-wrap gap-1.5 mb-4">
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-50 text-[10px] font-semibold text-slate-500 border border-slate-100">React Native</span>
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-50 text-[10px] font-semibold text-slate-500 border border-slate-100">Tailwind CSS</span>
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-50 text-[10px] font-semibold text-slate-500 border border-slate-100">Firebase</span>
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-50 text-[10px] font-semibold text-slate-500 border border-slate-100">Python AI</span>
-                                </div>
-                                <div class="flex items-center justify-between pt-4 border-t border-slate-50">
-                                    <span class="text-xs font-bold text-slate-400">Xem mã nguồn</span>
-                                    <a href="#" onclick="event.preventDefault();" class="inline-flex items-center space-x-1 text-xs font-bold text-emerald-600 hover:text-emerald-700">
-                                        <span>Xem chi tiết</span>
-                                        <i class="ph ph-arrow-square-out text-sm"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-
-
-                    <article class="project-card reveal reveal-up group bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full" data-category="design" data-delay="350">
-                        <div class="h-48 bg-gradient-to-br from-green-500/20 to-emerald-500/10 flex items-center justify-center p-6 border-b border-slate-100/50 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-emerald-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <svg viewBox="0 0 100 60" fill="none" class="w-full h-full text-emerald-600/40 group-hover:scale-105 group-hover:rotate-1 transition-transform duration-500">
-                                <rect x="10" y="10" width="80" height="40" rx="4" stroke="currentColor" stroke-width="2" />
-                                <path d="M18 42 L30 30 L45 38 L65 22 L82 35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                <circle cx="30" cy="30" r="3" fill="currentColor" />
-                                <circle cx="65" cy="22" r="3" fill="currentColor" />
-                            </svg>
-                            <div class="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-full border border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                                design
-                            </div>
-                        </div>
-                        <div class="p-6 flex-grow flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-bold text-lg text-slate-900 group-hover:text-emerald-700 transition-colors mb-2 leading-snug">
-                                    Giao diện Dashboard Phân tích Số liệu
-                                </h3>
-                                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-4">
-                                    Thiết kế hệ thống quản trị dữ liệu quy mô lớn, biểu diễn biểu đồ thông minh hỗ trợ doanh nghiệp đưa ra quyết định dựa trên thực tế.
-                                </p>
-                            </div>
-                            <div>
-                                <div class="flex flex-wrap gap-1.5 mb-4">
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-50 text-[10px] font-semibold text-slate-500 border border-slate-100">Figma</span>
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-50 text-[10px] font-semibold text-slate-500 border border-slate-100">UI/UX Research</span>
-                                    <span class="px-2 py-0.5 rounded-full bg-slate-50 text-[10px] font-semibold text-slate-500 border border-slate-100">Design System</span>
-                                </div>
-                                <div class="flex items-center justify-between pt-4 border-t border-slate-50">
-                                    <span class="text-xs font-bold text-slate-400">Xem mã nguồn</span>
-                                    <a href="#" onclick="event.preventDefault();" class="inline-flex items-center space-x-1 text-xs font-bold text-emerald-600 hover:text-emerald-700">
-                                        <span>Xem chi tiết</span>
-                                        <i class="ph ph-arrow-square-out text-sm"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </article-->
 
                 </div>
             </div>
@@ -829,10 +768,7 @@
 
     </div>
 
-    <!-- ========================================== -->
-    <!-- DỰ ÁN 2: MINECRAFT SERVER WEBSITE (WIBULAND)-->
-    <!-- ========================================== -->
-    <!-- -->
+    <!--MINECRAFT (WIBULAND)-->
     <div id="section-wibuland" class="hidden bg-[#fcfdfa] text-slate-800">
         
         <!-- Navbar -->
@@ -841,9 +777,10 @@
                 <div class="flex items-center justify-between h-16 sm:h-20 gap-4">
                     <!-- Logo / Upgraded with 3D stylized Minecraft Block instead of "Wibuland text only" -->
                     <a href="#" onclick="handleWLLogoClick(event)" class="flex items-center space-x-2 group shrink-0">
-                        <!--div id="nav-logo-icon" class="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-green-400 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shadow-emerald-200 group-hover:scale-105 transition-all">
+                        <!-- ẩn logo bằng style="display:none;" -->
+                        <div id="nav-logo-icon" style="display:none;" class="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-green-400 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shadow-emerald-200 group-hover:scale-105 transition-all">
                             <i class="ph-bold ph-cube text-xl"></i>
-                        </div-->
+                        </div>
                         <span id="nav-logo-text" class="font-display font-extrabold text-lg sm:text-xl text-emerald-800 tracking-tight">Wibu<span class="text-blue-600">Land</span></span>
                     </a>
 
@@ -949,7 +886,7 @@
                                         <span class="font-mono font-bold text-slate-700 text-sm sm:text-base">play.wibuland.io.vn</span>
                                     </div>
                                     <button onclick="copyServerIP('play.wibuland.io.vn')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center space-x-2 active:scale-95 text-sm">
-                                        <i class="ph ph-copy text-sm"></i>
+                                        <i data-lucide="copy" class="w-4 h-4"></i>
                                         <span>Copy IP</span>
                                     </button>
                                 </div>
@@ -987,10 +924,7 @@
                         <!-- Hero Right banner card -->
                         <div class="lg:col-span-5 relative mt-8 lg:mt-0 flex justify-center">
                             <div class="relative w-full max-w-sm sm:max-w-md bg-white rounded-3xl border border-slate-100 shadow-2xl p-6 sm:p-8 hover:translate-y-[-4px] transition-transform duration-300">
-                                <div class="absolute -top-5 -right-5 bg-amber-400 text-amber-950 font-display font-black text-xs px-4 py-1.5 rounded-full shadow-md rotate-12 flex items-center space-x-1">
-                                    <i data-lucide="zap" class="w-3.5 h-3.5 fill-current"></i>
-                                    <span>MỚI LẠ CỰC HOT!</span>
-                                </div>
+                                
 
                                 <div class="flex items-center space-x-4 mb-6">
                                     <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
@@ -1005,7 +939,7 @@
                                 <div class="space-y-4">
                                     <div class="flex items-start space-x-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
                                         <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-                                            <i class="ph ph-sword text-sm"></i>
+                                            <i data-lucide="swords" class="w-4 h-4"></i>
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-sm text-slate-800">PVP</h4>
@@ -1015,7 +949,7 @@
 
                                     <div class="flex items-start space-x-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
                                         <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
-                                            <i class="ph ph-crown text-sm"></i>
+                                            <i data-lucide="crown" class="w-4 h-4"></i>
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-sm text-slate-800">Đặc quyền riêng biệt</h4>
@@ -1025,7 +959,7 @@
 
                                     <div class="flex items-start space-x-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
                                         <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
-                                            <i class="ph ph-coins text-sm"></i>
+                                            <i data-lucide="coins" class="w-4 h-4"></i>
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-sm text-slate-800">Chợ đen và Giao dịch</h4>
@@ -1049,8 +983,8 @@
                 </div>
             </header>
 
-            <!-- ABOUT SECTION -->
-            <section id="wl-about" class="py-16 sm:py-24 bg-white">
+            <!-- ABOUT SECTION (ĐÃ THÊM CARD EFFECTS & REVEAL) -->
+            <section id="wl-about" class="py-16 sm:py-24 border-t border-slate-100 bg-white">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
                         <span class="text-emerald-600 font-bold text-xs sm:text-sm uppercase tracking-widest block">Về Chúng Tôi</span>
@@ -1061,7 +995,8 @@
                     </div>
 
                     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="bg-gradient-to-tr from-emerald-50 to-green-50/20 border border-emerald-100/60 p-6 rounded-2xl text-center space-y-2">
+                        <!-- Card 1 -->
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-emerald bg-gradient-to-tr from-emerald-50 to-green-50/20 border border-emerald-100/60 p-6 rounded-2xl text-center space-y-2" data-delay="100">
                             <div class="w-12 h-12 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4">
                                 <i data-lucide="shield-check" class="w-6 h-6"></i>
                             </div>
@@ -1069,7 +1004,8 @@
                             <p class="text-slate-500 text-sm font-medium">Đảm bảo trải nghiệm kết nối không bị gián đoạn, mượt mà 24/7.</p>
                         </div>
 
-                        <div class="bg-gradient-to-tr from-blue-50 to-blue-50/20 border border-blue-100/60 p-6 rounded-2xl text-center space-y-2">
+                        <!-- Card 2 -->
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-blue bg-gradient-to-tr from-blue-50 to-blue-50/20 border border-blue-100/60 p-6 rounded-2xl text-center space-y-2" data-delay="200">
                             <div class="w-12 h-12 bg-blue-500/10 text-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
                                 <i data-lucide="users" class="w-6 h-6"></i>
                             </div>
@@ -1077,7 +1013,8 @@
                             <p class="text-slate-500 text-sm font-medium">Hệ thống quản lý, bảo vệ tài sản và chống toxic hoàn hảo.</p>
                         </div>
 
-                        <div class="bg-gradient-to-tr from-amber-50 to-amber-50/20 border border-amber-100/60 p-6 rounded-2xl text-center space-y-2">
+                        <!-- Card 3 -->
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-amber bg-gradient-to-tr from-amber-50 to-amber-50/20 border border-amber-100/60 p-6 rounded-2xl text-center space-y-2" data-delay="300">
                             <div class="w-12 h-12 bg-amber-500/10 text-amber-600 rounded-xl flex items-center justify-center mx-auto mb-4">
                                 <i data-lucide="rocket" class="w-6 h-6"></i>
                             </div>
@@ -1085,7 +1022,8 @@
                             <p class="text-slate-500 text-sm font-medium">Bổ dung nội dung, nhiệm vụ và vật phẩm mới hàng tuần.</p>
                         </div>
 
-                        <div class="bg-gradient-to-tr from-indigo-50 to-indigo-50/20 border border-indigo-100/60 p-6 rounded-2xl text-center space-y-2">
+                        <!-- Card 4 -->
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-indigo bg-gradient-to-tr from-indigo-50 to-indigo-50/20 border border-indigo-100/60 p-6 rounded-2xl text-center space-y-2" data-delay="400">
                             <div class="w-12 h-12 bg-indigo-500/10 text-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-4">
                                 <i data-lucide="wrench" class="w-6 h-6"></i>
                             </div>
@@ -1136,7 +1074,7 @@
                 </div>
             </section>
 
-            <!-- GAME MODES -->
+            <!-- GAME MODES  -->
             <section id="wl-modes" class="py-16 sm:py-24 bg-white">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
@@ -1147,10 +1085,10 @@
 
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <!-- Survival Towny -->
-                        <div class="bg-[#fbfcfa] border border-slate-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 relative group overflow-hidden">
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-emerald bg-[#fbfcfa] border border-slate-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl relative group overflow-hidden" data-delay="100">
                             <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl group-hover:bg-emerald-500/10 transition-colors"></div>
                             <div>
-                                <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                                <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                     <i data-lucide="pickaxe" class="w-8 h-8"></i>
                                 </div>
                                 <h3 class="font-display font-extrabold text-xl text-slate-900 mb-3">Towny Survival</h3>
@@ -1179,10 +1117,10 @@
                         </div>
 
                         <!-- Skyblock Classic -->
-                        <div class="bg-[#fbfcfa] border border-slate-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 relative group overflow-hidden">
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-blue bg-[#fbfcfa] border border-slate-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl relative group overflow-hidden" data-delay="200">
                             <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl group-hover:bg-blue-500/10 transition-colors"></div>
                             <div>
-                                <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                                <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                     <i data-lucide="cloud-lightning" class="w-8 h-8"></i>
                                 </div>
                                 <h3 class="font-display font-extrabold text-xl text-slate-900 mb-3">Skyblock Island</h3>
@@ -1211,10 +1149,10 @@
                         </div>
 
                         <!-- Practice PvP Arena -->
-                        <div class="bg-[#fbfcfa] border border-slate-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300 relative group overflow-hidden">
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-amber bg-[#fbfcfa] border border-slate-100 rounded-3xl p-6 sm:p-8 flex flex-col justify-between hover:shadow-xl relative group overflow-hidden" data-delay="300">
                             <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl group-hover:bg-amber-500/10 transition-colors"></div>
                             <div>
-                                <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6">
+                                <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                                     <i data-lucide="swords" class="w-8 h-8"></i>
                                 </div>
                                 <h3 class="font-display font-extrabold text-xl text-slate-900 mb-3">PvP Arena Practice</h3>
@@ -1245,7 +1183,6 @@
                 </div>
             </section>
 
-            <!-- PREMIUM SHOP SECTION -->
             <section id="wl-shop" class="py-16 sm:py-24 bg-gradient-to-b from-white to-emerald-50/20 border-t border-slate-100">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center max-w-3xl mx-auto space-y-4 mb-16">
@@ -1255,8 +1192,8 @@
                     </div>
 
                     <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                        <!-- Package 1 -->
-                        <div class="bg-white border border-slate-200/60 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between hover:scale-[1.02] transition-transform">
+                        <!-- Package 1 (VIP) -->
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-emerald bg-white border border-slate-200/60 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between" data-delay="100">
                             <div class="space-y-6">
                                 <div>
                                     <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest block mb-2">GÓI VIP</span>
@@ -1284,9 +1221,9 @@
                             </button>
                         </div>
 
-                        <!-- Package 2 (POPULAR) -->
-                        <div class="bg-white border-2 border-emerald-500 rounded-3xl p-6 sm:p-8 shadow-xl relative flex flex-col justify-between hover:scale-[1.02] transition-transform">
-                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-500 text-white font-bold text-xs px-4 py-1.5 rounded-full shadow-md tracking-wider">
+                        <!-- Package 2 (MVP - POPULAR & SHIMMER EFFECT) -->
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-emerald shimmer-card bg-white border-2 border-emerald-500 rounded-3xl p-6 sm:p-8 shadow-xl relative flex flex-col justify-between" data-delay="200">
+                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-500 text-white font-bold text-xs px-4 py-1.5 rounded-full shadow-md tracking-wider z-20">
                                 ĐƯỢC YÊU THÍCH NHẤT
                             </div>
                             <div class="space-y-6">
@@ -1315,13 +1252,13 @@
                                     </li>
                                 </ul>
                             </div>
-                            <button onclick="openPurchaseModal('MVP', '70.000đ')" class="w-full mt-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-emerald-200 active:scale-95">
+                            <button onclick="openPurchaseModal('MVP', '70.000đ')" class="w-full mt-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-emerald-200 active:scale-95 z-20">
                                 Sở Hữu - 70k VNĐ
                             </button>
                         </div>
 
-                        <!-- Package 3 -->
-                        <div class="bg-white border border-slate-200/60 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between hover:scale-[1.02] transition-transform">
+                        <!-- Package 3 (LEGEND) -->
+                        <div class="reveal reveal-up wl-card-interactive wl-glow-indigo bg-white border border-slate-200/60 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between" data-delay="300">
                             <div class="space-y-6">
                                 <div>
                                     <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest block mb-2">GÓI TỐI CAO</span>
@@ -1419,7 +1356,6 @@
         </div>
 
         <!-- VIEW 2: WIKI SYSTEM (WIKI VIEW) -->
-        <!-- -->
         <div id="view-wiki" class="hidden min-h-screen bg-slate-50/50 border-t border-slate-100 pb-20">
             
             <aside class="sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/60 p-3 lg:p-0 lg:border-none lg:bg-transparent lg:static">
@@ -1558,9 +1494,11 @@
         <footer class="bg-slate-900 text-slate-400 pt-16 pb-24">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-12 gap-10 mb-12">
                 <div class="md:col-span-5 space-y-4">
-                    <a href="#wibuland" class="flex items-center space-x-3">
+                    <a href="#" onclick="switchWLView('profile')" class="flex items-center space-x-3">
                         <div id="footer-logo-icon" class="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-green-400 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-900/40">
-                            <i class="ph ph-cube text-xl"></i>
+                            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                                <path d="M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M5,5H19V9H17V7H15V9H13V7H11V9H9V7H7V9H5V5M19,19H5V11H7V13H9V11H11V13H13V11H15V13H17V11H19V19Z" />
+                            </svg>
                         </div>
                         <span id="footer-logo-text" class="font-display font-extrabold text-2xl text-white tracking-tight">Wibu<span class="text-blue-400">Land</span></span>
                     </a>
@@ -1662,10 +1600,6 @@
 
     </div>
 
-    <!-- ========================================== -->
-    <!-- MASTER JAVASCRIPT CONTROLLER (ROUTER) -->
-    <!-- ========================================== -->
-    <!-- -->
     <script>
         // Danh sách các router thuộc 2 website khác nhau
         const wlHashes = ['#wibuland', '#wl-about', '#wl-modes', '#wl-shop', '#wl-faq', '#wiki', '#wiki-commands', '#wiki-enchantments'];
@@ -1757,9 +1691,7 @@
         window.addEventListener('hashchange', routeMasterPage);
     </script>
 
-    <!-- ========================================== -->
     <!-- PORTFOLIO LOCAL SCRIPTS -->
-    <!-- ========================================== -->
     <script>
         // Scroll to Portfolio Section via Hash change
         function scrollToSection(id) {
@@ -1960,9 +1892,7 @@
         }
     </script>
 
-    <!-- ========================================== -->
     <!-- WIBULAND LOCAL SCRIPTS -->
-    <!-- ========================================== -->
     <script>
         // custom enchantment
         const enchantData = [
@@ -2637,9 +2567,7 @@
         }
     </script>
 
-    <!-- ========================================== -->
     <!-- GLOBAL SYNCHRONIZATION INITIALIZER -->
-    <!-- ========================================== -->
     <script>
         window.addEventListener('load', () => {
             // 1. Tắt preloader chung
